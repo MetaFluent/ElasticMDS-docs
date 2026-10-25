@@ -73,11 +73,13 @@ nav:
       - "Architecture: Advanced": Architecture-Advanced.md
       - "Security: Basics": Security-Basics.md
       - "Security: Advanced": Security-Advanced.md
+      - "Architecture: TLS": Architecture-TLS.md
       - "Glossary": Glossary.md
   - "Configuration":
       - "Basics": Configuration-Basics.md
       - "Advanced": Configuration-Advanced.md
       - "Reference": Configuration-Reference.md
+      - "TLS": Configuration-TLS.md
   - "Configuration Cookbook":
       - "Configure DACS": Cookbook-Configure-DACS.md
       - "Slow Consumer Protection": Cookbook-Configure-Slow-Consumer-Protection.md
@@ -88,6 +90,7 @@ nav:
       - "Image Catalog": Image-Catalog.md
       - "Without Docker": Deployment-Without-Docker.md
       - "Advanced": Deployment-Advanced.md
+      - "TLS": Deployment-TLS.md
   - "Operations":
       - "Monitoring & Diagnostics": Operations-Monitoring.md
       - "Logging": Operations-Logging.md
@@ -101,6 +104,7 @@ nav:
       - "JMS": Develop-JMS.md
       - "Worked Example: SimpleSubscriber": Example-SimpleSubscriber.md
       - "JDBC": Develop-JDBC.md
+      - "TLS": Develop-TLS.md
       - "Dynamic Data Conventions": Dynamic-Data-Conventions.md
       - "Entitlements Context": Entitlements-Context.md
   - "Reference":

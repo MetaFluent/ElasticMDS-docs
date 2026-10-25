@@ -59,7 +59,7 @@ A site that manages its own secrets can place its own value at the same path ins
 
 ## Transport security
 
-Within a deployment the services communicate over the deployment's trusted networks (see [Deployment: Basics](Deployment-Basics.md)). TLS for the REST/control plane is being added; until then, keep the gateway on a trusted management network and off client-facing ones.
+Elastic MDS can encrypt and authenticate every connection it serves or makes: client APIs (JMS, JDBC), browser clients over secure WebSockets, the connections between nodes, the API gateway's two doors and the single sign-on doorway. TLS is off by default and you turn it on connection by connection, with an **offered** mode that lets plaintext and TLS clients share a port while you migrate. Certificates and host names are always verified. See **[Architecture: TLS](Architecture-TLS.md)** for the model, **[Deployment: TLS](Deployment-TLS.md)** to set it up, and **[Configuration: TLS](Configuration-TLS.md)** for the settings.
 
 ---
 
@@ -72,6 +72,7 @@ Some deployment settings are genuine secrets - for example the **database userna
 ## Related pages
 
 - [Security: Advanced](Security-Advanced.md) - the mechanisms behind these surfaces: the token model, the machine door, and single sign-on.
+- [Architecture: TLS](Architecture-TLS.md) - encrypting and authenticating connections with TLS.
 - [Access Control](Access-Control.md) - client authentication and the entitlements (authorization) framework.
 - [API Token Administration](API-Token-Administration.md) - issuing and managing REST tokens.
 - [Deployment: Basics](Deployment-Basics.md) - network placement of the gateway.

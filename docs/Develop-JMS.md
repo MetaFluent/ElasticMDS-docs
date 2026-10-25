@@ -146,3 +146,4 @@ What Elastic MDS (v6) adds is available on your terms:
 - [Architecture: Basics](Architecture-Basics.md) - the model behind the API.
 - [Glossary](Glossary.md) - definitions of the terms used here.
 - [JDBC Application Development](Develop-JDBC.md) - query the same content over JDBC.
+- [Developing with TLS](Develop-TLS.md) - connect over TLS.
