@@ -1,0 +1,2693 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="MetaFluent Elastic MDS documentation">
+      
+      
+      
+        <link rel="canonical" href="https://metafluent.github.io/ElasticMDS-docs/6.0/REST-API/">
+      
+      
+      
+        <link rel="prev" href="../Entitlements-Context/">
+      
+      
+        <link rel="next" href="../Log-Message-Reference/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.svg">
+      <meta name="generator" content="zensical-0.0.72">
+    
+    
+      
+        <title>REST API - Elastic MDS</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/classic/main.94dd801d.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/classic/palette.813d4b3f.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/brand.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Skip to content
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="./.." title="Elastic MDS" class="md-header__button md-logo" aria-label="Elastic MDS" data-md-component="logo">
+      
+  <img src="../assets/images/logo.svg" alt="Elastic MDS">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+      <span class="md-visually-hidden">Navigation</span>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Elastic MDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              REST API
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          <span class="md-visually-hidden">Search</span>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Elastic MDS" class="md-nav__button md-logo" aria-label="Elastic MDS" data-md-component="logo">
+      
+  <img src="../assets/images/logo.svg" alt="Elastic MDS">
+
+    </a>
+    Elastic MDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Getting Started
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Getting Started
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../How-to-Read/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  How to Read This Guide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Quick-Start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Quick Start
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Whats-New/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  What's New in Elastic MDS
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Deployment Cookbook
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Deployment Cookbook
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Cookbook-Deploy-Static-MDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Static MDS
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Cookbook-Deploy-Fine-Grained/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Fine-Grained
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Cookbook-Deploy-Static-Compute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Static MDS with Compute
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Cookbook-Deploy-Scalable/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Scalable MDS
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Cookbook-Deploy-Demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Demo
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Concepts
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Concepts
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Architecture-Basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Architecture: Basics
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Access-Control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Access Control
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Architecture-Advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Architecture: Advanced
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Security-Basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Security: Basics
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Security-Advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Security: Advanced
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Glossary
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Configuration
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Configuration
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Configuration-Basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Basics
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Configuration-Advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Advanced
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Configuration-Reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reference
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Configuration Cookbook
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_6">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Configuration Cookbook
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Cookbook-Configure-DACS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Configure DACS
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Cookbook-Configure-Slow-Consumer-Protection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Slow Consumer Protection
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Cookbook-Enable-Tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Enable Tokens
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Cookbook-Enable-SSO/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Enable SSO
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Deployment
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_7">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Deployment
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Deployment-Basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Basics
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Image-Catalog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Image Catalog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Deployment-Without-Docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Without Docker
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Deployment-Advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Advanced
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Operations
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_8">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Operations
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Operations-Monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Monitoring & Diagnostics
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Operations-Logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Logging
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Dashboard
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Operations-Troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Troubleshooting & FAQ
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AI-Troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  AI-Assisted Troubleshooting
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API-Token-Administration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  API Token Administration
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Diagnostic Cookbook
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_9">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Diagnostic Cookbook
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Diagnostic-Cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Tracing
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Developing Applications
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_10">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Developing Applications
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Develop-JMS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  JMS
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Example-SimpleSubscriber/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Worked Example: SimpleSubscriber
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Develop-JDBC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  JDBC
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Dynamic-Data-Conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Dynamic Data Conventions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Entitlements-Context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Entitlements Context
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reference
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_11">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Reference
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+        <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  REST API
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  REST API
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The gateway
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-same-services-in-every-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The same services in every deployment
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#singletons-and-per-container-apis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Singletons and per-container APIs
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#discover-what-a-deployment-offers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Discover what a deployment offers
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addressing-an-instance" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Addressing an instance
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-inside-collections" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Working inside collections
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#projection-shaping-the-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Projection: shaping the response
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Projection: shaping the response">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shallow-vs-deep" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Shallow vs deep
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#controlling-the-running-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Controlling the running system
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#putting-it-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Putting it together
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Quick reference
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Where to go next
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Log-Message-Reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Log Message Reference
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The gateway
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-same-services-in-every-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The same services in every deployment
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#singletons-and-per-container-apis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Singletons and per-container APIs
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#discover-what-a-deployment-offers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Discover what a deployment offers
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addressing-an-instance" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Addressing an instance
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-inside-collections" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Working inside collections
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#projection-shaping-the-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Projection: shaping the response
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Projection: shaping the response">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shallow-vs-deep" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Shallow vs deep
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#controlling-the-running-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Controlling the running system
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#putting-it-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Putting it together
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Quick reference
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Where to go next
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="./.." class="md-path__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+      <li class="md-path__item">
+        <a href="././" class="md-path__link">
+          
+  
+  <span class="md-ellipsis">
+    Reference
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+
+<h1 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h1>
+<p>The REST API is Elastic MDS's <strong>control-plane</strong> interface: it reads operational state and statistics from a running deployment, and controls a few runtime settings. REST is for <strong>monitoring</strong> a deployment and for <strong>building tooling</strong> around it.</p>
+<p>For most operators, the <strong><a href="../Dashboard/">Dashboard</a></strong> is the recommended way to watch a deployment - it presents these same signals in a browser, live, with no <code>curl</code>. This page is for when you want to query a deployment directly, script a check, or integrate it with your own monitoring.</p>
+<p><strong>Audience:</strong> operators; developers building monitoring or tooling.</p>
+<p>The pages that use these calls - <a href="../Operations-Monitoring/">Operations: Monitoring &amp; Diagnostics</a> and <a href="../Operations-Logging/">Operations: Logging</a> - show the <em>what</em>; this page is the <em>how</em>: the grammar every one of those URLs is built from.</p>
+<hr />
+<h2 id="the-gateway">The gateway<a class="headerlink" href="#the-gateway" title="Permanent link">&para;</a></h2>
+<p>Every REST call goes to one place - the <strong>API gateway</strong>, which aggregates every component in the deployment behind a single host:</p>
+<div class="highlight"><pre><span></span><code>http://mf-api-gateway:9090
+</code></pre></div>
+<p>Plain HTTP on port <code>9090</code>. <code>mf-api-gateway</code> is a DNS name that must resolve to the gateway from wherever you run the command - see <a href="../Deployment-Basics/#setting-up-a-dns-entry-for-your-api-gateway">Setting up a DNS entry for your API Gateway</a>. (<code>localhost</code> does not reach it - the cluster runs behind the gateway alias.)</p>
+<p>Calls are <strong>read-mostly</strong>: the great majority are <code>GET</code>s that change nothing. The few that mutate the running system are called out under <a href="#controlling-the-running-system">Controlling the running system</a> below.</p>
+<p><strong>Authentication.</strong> The REST interface is authenticated with <strong>API tokens</strong> - present a <code>Bearer</code> token on each call (the examples in this wiki omit the header for brevity). Keep the gateway on a trusted network as well. See <a href="../Security-Basics/">Security: Basics</a> and <a href="../API-Token-Administration/">API Token Administration</a>.</p>
+<hr />
+<h2 id="the-same-services-in-every-deployment">The same services in every deployment<a class="headerlink" href="#the-same-services-in-every-deployment" title="Permanent link">&para;</a></h2>
+<p>The gateway exposes the <strong>same set of APIs in every deployment</strong>, regardless of topology. A deployment is only a physical arrangement of one identical set of services, so what you learn here works unchanged from a single consolidated container to a large Kubernetes cluster. The only thing that differs between topologies is <em>which</em> container a given service runs in - and that is invisible from the gateway. A query you write against a laptop deployment runs untouched against production.</p>
+<hr />
+<h2 id="singletons-and-per-container-apis">Singletons and per-container APIs<a class="headerlink" href="#singletons-and-per-container-apis" title="Permanent link">&para;</a></h2>
+<p>Two kinds of API, and the difference decides how you address them:</p>
+<ul>
+<li><strong>Per-container APIs</strong> have one instance per container (or per adapter) - for example <code>application-state</code>, <code>push-distribution-server</code>, <code>config</code>. You pick an instance with the segment right after <code>/v1/</code> (see <a href="#addressing-an-instance">Addressing an instance</a>).</li>
+<li><strong>Singleton APIs</strong> have exactly one instance in the whole deployment - for example <code>orchestration</code> and <code>log-service</code>. There is no instance to choose, so you address their resources directly, with no instance segment: <code>/api/orchestration/v1/sessions/...</code>.</li>
+</ul>
+<p>The <code>apidoc</code> (below) tells you which an API is - its <code>info</code> block carries <code>x-singleton: true</code> or <code>false</code>.</p>
+<hr />
+<h2 id="discover-what-a-deployment-offers">Discover what a deployment offers<a class="headerlink" href="#discover-what-a-deployment-offers" title="Permanent link">&para;</a></h2>
+<p>The gateway describes itself - here is how to ask it what is available, rather than assuming a path.</p>
+<p><strong>1. List the registered APIs.</strong> The catalog names every API in the deployment:</p>
+<div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/gateway/v1/apis/*/properties/name"
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">[</span><span class="s2">"application-state"</span><span class="p">,</span><span class="s2">"push-distribution-server"</span><span class="p">,</span><span class="s2">"log-service"</span><span class="p">,</span><span class="s2">"config"</span><span class="p">,</span><span class="s2">"projector"</span><span class="p">,</span>
+<span class="w"> </span><span class="s2">"eta-client"</span><span class="p">,</span><span class="s2">"session-server"</span><span class="p">,</span><span class="s2">"orchestration"</span><span class="p">,</span><span class="s2">"conflation-rules"</span><span class="p">,</span><span class="s2">"log"</span><span class="p">,</span><span class="s2">"gateway"</span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>2. Read one API's <code>apidoc</code>.</strong> Each API publishes an OpenAPI 3.0.3 document describing every path, verb, and field it exposes:</p>
+<div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/application-state/v1/apidoc"
+</code></pre></div>
+<p>Two things to read from it:</p>
+<ul>
+<li><strong><code>paths</code></strong> - every resource and sub-resource the API offers, and the verbs on each. This is the authoritative list of what you can ask for; read it for the exact path, since each API's resources are its own.</li>
+<li><strong><code>servers</code></strong> - the live <strong>instances</strong> of the API. Each entry is one instance's URL, and its <code>x-instance</code> value is that instance's id. This is where the real ids come from when you need to address one instance directly.</li>
+</ul>
+<p>Every API answers at the fixed pattern <code>/api/&lt;api-name&gt;/v1/...</code>. The rest of this page is what goes after that.</p>
+<hr />
+<h2 id="addressing-an-instance">Addressing an instance<a class="headerlink" href="#addressing-an-instance" title="Permanent link">&para;</a></h2>
+<p>This section applies to <strong>per-container</strong> APIs. (Singletons have no instance segment - skip to <a href="#working-inside-collections">Working inside collections</a>.)</p>
+<p>The segment after <code>.../v1/</code> chooses the instance. An instance id is usually a <strong>UUID</strong>; a few APIs use a readable <strong>name</strong> instead. The <code>apidoc</code> <code>servers</code> block lists the actual ids for the API you are querying.</p>
+<p><strong>All instances - the wildcard <code>*</code>.</strong> This is the form you will use most, and it copy-pastes as-is:</p>
+<p><div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/application-state/v1/*/name,role,state"
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mf-mds-consolidated"</span><span class="p">,</span><span class="w"> </span><span class="nt">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACTIVE"</span><span class="p">,</span><span class="w"> </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FULLY_OPERATIONAL"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mf-eta-simulator"</span><span class="p">,</span><span class="w">    </span><span class="nt">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACTIVE"</span><span class="p">,</span><span class="w"> </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FULLY_OPERATIONAL"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">]</span>
+</code></pre></div></p>
+<p><strong>One instance by id.</strong> Substitute a real id from the <code>apidoc</code> <code>servers</code> block:</p>
+<div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/application-state/v1/&lt;your-instance-id&gt;/name,role,state"
+</code></pre></div>
+<p><strong>One (or several) instances by predicate.</strong> A predicate is an <code>attribute operator value</code> test placed in the instance segment; it matches on any scalar field the resource exposes, not just its id. The predicate <code>name=mf-mds-consolidated</code> selects the instance whose name is exactly that:</p>
+<div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/application-state/v1/name=mf-mds-consolidated/name,role,state"
+</code></pre></div>
+<p><strong>Matching by substring - the <code>~</code> (like) operator.</strong> Full names are tedious to type, so match on a fragment instead. The predicate <code>name~mf-mds</code> selects any instance whose name <em>contains</em> <code>mf-mds</code>:</p>
+<div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/application-state/v1/name~mf-mds/name,role,state"
+</code></pre></div>
+<p>A predicate that matches nothing returns an empty list, <code>[]</code> - so it filters as well as selects. The same mechanism picks out a broken component: the predicate <code>state=RECOVERING</code> returns only the containers currently recovering.</p>
+<div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/application-state/v1/state=RECOVERING/name,info"
+</code></pre></div>
+<hr />
+<h2 id="working-inside-collections">Working inside collections<a class="headerlink" href="#working-inside-collections" title="Permanent link">&para;</a></h2>
+<p>Many resources are <strong>collections</strong>, and collections can themselves contain collections - which is how you navigate several levels into a deployment with one URL.</p>
+<p>The <code>orchestration</code> API shows the pattern well (and, being a singleton, needs no instance segment). Its nesting mirrors what a client is doing:</p>
+<ul>
+<li>a <strong>session</strong> is a connected client;</li>
+<li>each session holds one or more <strong>statements</strong> - the queries that client has open;</li>
+<li>each statement produces one or more <strong>results</strong>;</li>
+<li>each result is served by one or more <strong>shards</strong>.</li>
+</ul>
+<p>That is four collections nested inside each other. Walk into them with <code>*</code> at each level. Ask every session for the text of every query it is running:</p>
+<p><div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/orchestration/v1/sessions/*/statements/*/info/expression"
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">[</span><span class="w"> </span><span class="s2">"SELECT *, MFUtil.UPDATED(MFUtil.TIMER(250,'MILLISECONDS'),TRDPRC_1) AS CONSTRAINT_ FROM Chains.RDF WHERE ChainSymbol_='0#CHAIN.1000' AND CONSTRAINT_ = 1"</span><span class="w"> </span><span class="p">]</span>
+</code></pre></div></p>
+<p>Go the whole way down - every shard's congestion level, across every result of every statement of every session:</p>
+<div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/orchestration/v1/sessions/*/statements/*/results/*/shards/*/stats/concernLevel"
+</code></pre></div>
+<p>The nested arrays in the response mirror the nested collections in the path.</p>
+<p><strong>Filter a collection by predicate.</strong> The predicates from the previous section work at any level. Ask the push server for only the shards that are currently protecting a slow consumer - the predicate <code>autoConflationEngaged=true</code> keeps just those elements:</p>
+<div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/push-distribution-server/v1/*/shards/autoConflationEngaged=true/shardID,offeredUpdates"
+</code></pre></div>
+<p><strong>Pick one element by name.</strong> A bare name works for any name without a <code>/</code> in it, spaces and dots included:</p>
+<div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/application-state/v1/*/constituents/Memory%20Monitor/name,state"
+</code></pre></div>
+<p><strong>Names with grammar characters.</strong> Some component names contain <code>=</code>, <code>[</code>, <code>]</code> (e.g. <code>PacketProtocolServer [protocol=SessionProtocol]</code>), which the selector grammar would otherwise try to interpret. The <strong>literal-match</strong> operator <code>name:value</code> takes the value verbatim:</p>
+<div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/application-state/v1/*/constituents/name:PacketProtocolServer%20%5Bprotocol=SessionProtocol%5D/name,state"
+</code></pre></div>
+<hr />
+<h2 id="projection-shaping-the-response">Projection: shaping the response<a class="headerlink" href="#projection-shaping-the-response" title="Permanent link">&para;</a></h2>
+<p>By default a resource returns its whole object. Add a trailing field spec to get back only what you want - fewer bytes, and exactly the structure your script expects.</p>
+<p><strong>One field:</strong></p>
+<div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/log/v1/*/level"
+</code></pre></div>
+<p><strong>Several fields - a comma list</strong> (one round trip, an object per instance):</p>
+<div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/application-state/v1/*/name,role,state,info"
+</code></pre></div>
+<p><strong>A nested field - a dot-path token.</strong> Reach into a sub-object without fetching the whole thing. The <strong>verbatim dotted name is the JSON key</strong> in the result (it is not re-nested):</p>
+<p><div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/application-state/v1/*/name,system.summary.systemID"
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">[</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mf-mds-consolidated"</span><span class="p">,</span><span class="w"> </span><span class="nt">"system.summary.systemID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0982160d-0c33-47da-91e0-218cb8777332"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mf-eta-simulator"</span><span class="p">,</span><span class="w">    </span><span class="nt">"system.summary.systemID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"13ee295e-1f2f-4cc5-a855-1d6222f3baf3"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">]</span>
+</code></pre></div></p>
+<p>A projection token that names nothing <strong>fails loudly</strong> - the response is an error naming the token, not a silent empty field - so a typo is easy to spot.</p>
+<h3 id="shallow-vs-deep">Shallow vs deep<a class="headerlink" href="#shallow-vs-deep" title="Permanent link">&para;</a></h3>
+<p>Whether nested collections are expanded is controlled by a <strong>trailing slash</strong>:</p>
+<ul>
+<li><strong>No trailing slash - shallow.</strong> Nested collections are suppressed; you get the object's own fields.</li>
+<li><strong>Trailing slash - deep.</strong> The gateway recurses into nested collections and returns them too.</li>
+</ul>
+<div class="highlight"><pre><span></span><code>curl -s "http://mf-api-gateway:9090/api/push-distribution-server/v1/*/shards/"   # deep: every shard, expanded
+</code></pre></div>
+<p>Reach for deep when you want a whole sub-tree in one call; stay shallow when you just want the top level.</p>
+<hr />
+<h2 id="controlling-the-running-system">Controlling the running system<a class="headerlink" href="#controlling-the-running-system" title="Permanent link">&para;</a></h2>
+<p>A few endpoints <strong>change</strong> the running deployment. These are the exception, and because they alter live behavior you should note the previous value and restore it when you are done.</p>
+<p>The common one is <strong>raising a component's log level</strong> to investigate it - a <code>PATCH</code> on the <code>log</code> API:</p>
+<div class="highlight"><pre><span></span><code>curl -X PATCH "http://mf-api-gateway:9090/api/log/v1/&lt;component&gt;/level?level=FINE"
+</code></pre></div>
+<p>Set it back (usually <code>INFO</code> or <code>CONFIG</code>) once you have what you need. Retrieving log <em>records</em> is a separate, read-only API - see <a href="../Operations-Logging/">Operations: Logging</a>.</p>
+<hr />
+<h2 id="putting-it-together">Putting it together<a class="headerlink" href="#putting-it-together" title="Permanent link">&para;</a></h2>
+<p>The whole flow, end to end - discover, then query:</p>
+<div class="highlight"><pre><span></span><code># 1. What APIs are here?
+curl -s "http://mf-api-gateway:9090/api/gateway/v1/apis/*/properties/name"
+
+# 2. What does the push server expose?
+curl -s "http://mf-api-gateway:9090/api/push-distribution-server/v1/apidoc" | less
+
+# 3. Ask a real question: which shards are protecting a slow consumer right now?
+curl -s "http://mf-api-gateway:9090/api/push-distribution-server/v1/*/shards/autoConflationEngaged=true/shardID,offeredUpdates"
+</code></pre></div>
+<p>That last line reads as: on every push-distribution-server instance (<code>*</code>), take the <code>shards</code> collection, keep the elements where <code>autoConflationEngaged</code> is <code>true</code>, and return each one's <code>shardID</code> and <code>offeredUpdates</code>. Every URL on the Operations pages is assembled from exactly these pieces.</p>
+<hr />
+<h2 id="quick-reference">Quick reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>You want...</th>
+<th>Form</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>List all APIs</td>
+<td><code>/api/gateway/v1/apis/*/properties/name</code></td>
+</tr>
+<tr>
+<td>Describe an API (and see if it is a singleton)</td>
+<td><code>/api/&lt;api&gt;/v1/apidoc</code></td>
+</tr>
+<tr>
+<td>A singleton API's resource</td>
+<td><code>/api/&lt;api&gt;/v1/&lt;resource&gt;</code> (no instance segment)</td>
+</tr>
+<tr>
+<td>All instances</td>
+<td><code>/api/&lt;api&gt;/v1/*</code></td>
+</tr>
+<tr>
+<td>One instance by id</td>
+<td><code>/api/&lt;api&gt;/v1/&lt;id&gt;</code></td>
+</tr>
+<tr>
+<td>Instances where attribute equals</td>
+<td><code>/api/&lt;api&gt;/v1/&lt;attr&gt;=&lt;value&gt;</code></td>
+</tr>
+<tr>
+<td>Instances where attribute contains</td>
+<td><code>/api/&lt;api&gt;/v1/&lt;attr&gt;~&lt;fragment&gt;</code></td>
+</tr>
+<tr>
+<td>A collection element by name</td>
+<td><code>/.../collection/&lt;name&gt;</code></td>
+</tr>
+<tr>
+<td>...name with special chars</td>
+<td><code>/.../collection/name:&lt;verbatim value&gt;</code></td>
+</tr>
+<tr>
+<td>Filter a collection</td>
+<td><code>/.../collection/&lt;attr&gt;=&lt;value&gt;</code></td>
+</tr>
+<tr>
+<td>One field</td>
+<td><code>/.../&lt;id&gt;/field</code></td>
+</tr>
+<tr>
+<td>Several fields</td>
+<td><code>/.../&lt;id&gt;/field1,field2</code></td>
+</tr>
+<tr>
+<td>A nested field</td>
+<td><code>/.../&lt;id&gt;/field,parent.child</code></td>
+</tr>
+<tr>
+<td>Expand nested collections</td>
+<td>trailing <code>/</code> (deep)</td>
+</tr>
+<tr>
+<td>Change a log level</td>
+<td><code>PATCH /api/log/v1/&lt;id&gt;/level?level=FINE</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="where-to-go-next">Where to go next<a class="headerlink" href="#where-to-go-next" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../Operations-Monitoring/">Operations: Monitoring &amp; Diagnostics</a> - health, the broken constituent, and resource stats, built on these calls.</li>
+<li><a href="../Operations-Logging/">Operations: Logging</a> - querying the log service.</li>
+<li><a href="../Dashboard/">Dashboard</a> - the same signals in a browser (user guide to follow).</li>
+<li><a href="../Glossary/">Glossary</a> - definitions of the terms used here.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../Entitlements-Context/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Entitlements Context">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Entitlements Context
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../Log-Message-Reference/" class="md-footer__link md-footer__link--next" aria-label="Next: Log Message Reference">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Log Message Reference
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; MetaFluent
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["navigation.path","navigation.indexes","navigation.top","navigation.footer","navigation.instant","navigation.tracking","toc.follow","search.highlight","search.suggest","content.code.copy"],"redirect":null,"search":"../assets/javascripts/workers/search.c47bb847.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.10ee5ab6.min.js"></script>
+      
+    
+  </body>
+</html>
