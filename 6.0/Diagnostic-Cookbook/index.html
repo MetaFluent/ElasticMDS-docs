@@ -1749,10 +1749,43 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#add-a-trace" class="md-nav__link">
+  <a href="#start-a-trace" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Add a trace
+        Start a trace
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trace-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Trace specification
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selecting-what-to-trace" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Selecting what to trace
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#durations" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Durations
       </span>
     </span>
   </a>
@@ -1771,10 +1804,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#delete-a-trace" class="md-nav__link">
+  <a href="#renew-a-trace" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Delete a trace
+        Renew a trace
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stop-a-trace" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Stop a trace
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-the-trace-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Read the trace output
       </span>
     </span>
   </a>
@@ -2199,10 +2254,43 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#add-a-trace" class="md-nav__link">
+  <a href="#start-a-trace" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Add a trace
+        Start a trace
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trace-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Trace specification
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selecting-what-to-trace" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Selecting what to trace
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#durations" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Durations
       </span>
     </span>
   </a>
@@ -2221,10 +2309,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#delete-a-trace" class="md-nav__link">
+  <a href="#renew-a-trace" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        Delete a trace
+        Renew a trace
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stop-a-trace" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Stop a trace
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-the-trace-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Read the trace output
       </span>
     </span>
   </a>
@@ -2332,25 +2442,121 @@ operation that is easy to forget or easy to get wrong.</p>
 <p><strong>Audience:</strong> Operator, Developer.</p>
 <p><strong>How to read:</strong> Each entry is one task and the command that performs it. Commands target <code>bash</code> and the gateway convention host <code>mf-api-gateway:9090</code>. For the REST projection and selection grammar these commands use, see <a href="../REST-API/">REST API</a>; for symptom-driven diagnosis, see <a href="../Operations-Troubleshooting/">Troubleshooting &amp; FAQ</a>.</p>
 <h2 id="tracing">Tracing<a class="headerlink" href="#tracing" title="Permanent link">&para;</a></h2>
-<p>A trace records the internal handling of sessions, statements, and orchestration for a running session server. A trace is created against the session server, listed while active, and deleted when no longer needed.</p>
-<p>Trace operations are addressed to the session-server API. The <code>*</code> element addresses all session-server instances; substitute a specific server ID to target one.</p>
-<h3 id="add-a-trace">Add a trace<a class="headerlink" href="#add-a-trace" title="Permanent link">&para;</a></h3>
-<p><code>trace</code> is required and takes a trace specification. <code>ALL</code> enables all categories.</p>
-<div class="highlight"><pre><span></span><code>curl -X POST http://mf-api-gateway:9090/api/session-server/v1/*/traces\?trace=ALL
+<p>A trace records the internal handling of sessions, statements, and orchestration for a running session server. You start a trace, list the active ones, renew or stop them, and read the output in the logs. Every trace stops by itself after a limited time, so detailed tracing stays affordable.</p>
+<p>Trace operations are addressed to the session-server API. The <code>*</code> element reaches the active session server; standby servers do not expose this API.</p>
+<h3 id="start-a-trace">Start a trace<a class="headerlink" href="#start-a-trace" title="Permanent link">&para;</a></h3>
+<p><code>trace</code> is required and takes a trace specification. All other parameters are optional selectors that narrow what the trace covers.</p>
+<div class="highlight"><pre><span></span><code>curl -X POST "http://mf-api-gateway:9090/api/session-server/v1/*/traces?trace=orchestration:SHARD_CONTENT_BINDING:VERBOSE,orchestration:REQUEST&amp;user=alice&amp;table=md.quotes.rdf&amp;minutes=10"
 </code></pre></div>
 <p>The response is the new trace ID.</p>
-<p>To list the valid trace-specification categories:</p>
-<div class="highlight"><pre><span></span><code>curl http://mf-api-gateway:9090/api/session-server/v1/*/traceSpecificationHelp
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>trace</code></td>
+<td>The trace specification (see below). Required.</td>
+</tr>
+<tr>
+<td><code>user</code>, <code>application</code>, <code>position</code></td>
+<td>Select the sessions to trace.</td>
+</tr>
+<tr>
+<td><code>table</code></td>
+<td>Narrow the trace to a table, as <code>catalog.schema.table</code>.</td>
+</tr>
+<tr>
+<td><code>key</code></td>
+<td>Narrow the trace to a key.</td>
+</tr>
+<tr>
+<td><code>component</code></td>
+<td>Select a component, such as a projector.</td>
+</tr>
+<tr>
+<td><code>minutes</code></td>
+<td>How long the trace runs (see <a href="#durations">Durations</a>).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="trace-specification">Trace specification<a class="headerlink" href="#trace-specification" title="Permanent link">&para;</a></h3>
+<p>A specification is a comma-separated list of entries:</p>
+<ul>
+<li><code>subsystem:CATEGORY</code> - the category at basic detail.</li>
+<li><code>subsystem:CATEGORY:VERBOSE</code> - the category at verbose detail.</li>
+<li><code>subsystem:*</code> or <code>subsystem:*:VERBOSE</code> - every category of a subsystem, at basic or verbose detail.</li>
+</ul>
+<p>Names and levels are case-sensitive. An unknown name or level is rejected with a message that lists the valid ones. For example:</p>
+<div class="highlight"><pre><span></span><code>orchestration:SHARD_CONTENT_BINDING:VERBOSE,orchestration:REQUEST
 </code></pre></div>
-<p>A trace can be scoped with the optional <code>user</code>, <code>application</code>, and <code>position</code> query parameters.</p>
+<p>The <code>orchestration</code> subsystem provides categories today, and further subsystems are added over time. To list the subsystems and categories, each with its cost (<code>LIGHT</code> or <code>PER_ITEM</code>), a description, and the duration limits:</p>
+<div class="highlight"><pre><span></span><code>curl http://mf-api-gateway:9090/api/session-server/v1/*/traceCategories
+</code></pre></div>
+<h3 id="selecting-what-to-trace">Selecting what to trace<a class="headerlink" href="#selecting-what-to-trace" title="Permanent link">&para;</a></h3>
+<p>The <code>user</code>, <code>application</code>, and <code>position</code> fields select sessions; <code>table</code> and <code>key</code> narrow a trace to content; <code>component</code> selects a component such as a projector. Every field is optional, an omitted field matches everything, and matching is exact. Fields combine - for example, user <code>alice</code> on table <code>md.quotes.rdf</code>. When several traces match a session, all of them apply.</p>
+<h3 id="durations">Durations<a class="headerlink" href="#durations" title="Permanent link">&para;</a></h3>
+<p>Every trace runs for a limited time and then stops by itself. If you omit <code>minutes</code>, the trace runs for the default of its tier. A value above the tier maximum is rejected with the reason. The tier follows from what you ask for:</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>What it covers</th>
+<th>Default</th>
+<th>Maximum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LIGHT</code></td>
+<td>Only light categories at basic detail</td>
+<td>15 minutes</td>
+<td>60 minutes</td>
+</tr>
+<tr>
+<td><code>HEAVY_NARROW</code></td>
+<td>Any per-item category or verbose detail, with a user, table, or key</td>
+<td>5 minutes</td>
+<td>30 minutes</td>
+</tr>
+<tr>
+<td><code>HEAVY_BROAD</code></td>
+<td>Per-item or verbose detail with no user, table, or key</td>
+<td>2 minutes</td>
+<td>5 minutes</td>
+</tr>
+</tbody>
+</table>
+<p>The limits are settings in the session server's configuration: <code>server.traceLightDefaultMinutes</code>, <code>server.traceLightMaximumMinutes</code>, <code>server.traceHeavyNarrowDefaultMinutes</code>, <code>server.traceHeavyNarrowMaximumMinutes</code>, <code>server.traceHeavyBroadDefaultMinutes</code>, and <code>server.traceHeavyBroadMaximumMinutes</code>.</p>
 <h3 id="see-the-active-traces">See the active traces<a class="headerlink" href="#see-the-active-traces" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>curl http://mf-api-gateway:9090/api/session-server/v1/*/traces
 </code></pre></div>
-<p>Each entry lists its <code>traceID</code> and <code>traceSpecification</code>.</p>
-<h3 id="delete-a-trace">Delete a trace<a class="headerlink" href="#delete-a-trace" title="Permanent link">&para;</a></h3>
-<p>Address the trace by its ID in the path - the ID returned when the trace was created, or one from the active-traces list.</p>
+<p>Each entry shows its <code>traceID</code>, selector, <code>traceSpecification</code>, <code>tier</code>, <code>minutes</code>, <code>expiresAt</code> (UTC), and <code>remainingSeconds</code>.</p>
+<h3 id="renew-a-trace">Renew a trace<a class="headerlink" href="#renew-a-trace" title="Permanent link">&para;</a></h3>
+<p>To run a trace for its duration again, counted from now:</p>
+<div class="highlight"><pre><span></span><code>curl -X PATCH "http://mf-api-gateway:9090/api/session-server/v1/*/traces/&lt;ID&gt;/expiresAt?value=renew"
+</code></pre></div>
+<p>To run for a different duration, stop the trace and start a new one with the <code>minutes</code> you want.</p>
+<h3 id="stop-a-trace">Stop a trace<a class="headerlink" href="#stop-a-trace" title="Permanent link">&para;</a></h3>
+<p>Address the trace by its ID in the path - the ID returned when the trace was started, or one from the active-traces list. An unknown ID is rejected.</p>
 <div class="highlight"><pre><span></span><code>curl -X DELETE http://mf-api-gateway:9090/api/session-server/v1/*/traces/&lt;ID&gt;
 </code></pre></div>
+<h3 id="read-the-trace-output">Read the trace output<a class="headerlink" href="#read-the-trace-output" title="Permanent link">&para;</a></h3>
+<p>Each trace line in the logs starts with the category and the full trace ID, followed by what is being traced:</p>
+<div class="highlight"><pre><span></span><code>TRACE [subsystem.CATEGORY] [traceID=&lt;full trace ID&gt;] ...
+</code></pre></div>
+<p>The log service collects a trace's records from every container. To read them, newest first:</p>
+<div class="highlight"><pre><span></span><code>curl "http://mf-api-gateway:9090/api/log-service/v1/queryLogs?traceID=&lt;ID&gt;&amp;limit=200"
+</code></pre></div>
+<p><code>since</code> (epoch milliseconds), <code>text</code> (a substring the line must contain), <code>limit</code>, and <code>block=true</code> (wait for the next records) work as they do for the other log queries. Each record has the full trace line as its message, plus the trace IDs, subsystem, category, and level as separate fields.</p>
+<p>If any records were dropped, either because a container produced them faster than it could send them or because the trace reached the log service's limit, the first record in the results says how many and where.</p>
+<p>By default the log service keeps a trace's records for 60 minutes after its last record, up to 10,000 records per trace and 50 traces at a time (settings <code>centralizedLogService.traceRetentionMinutes</code>, <code>centralizedLogService.maxTraceRecords</code>, and <code>centralizedLogService.maxTraces</code>). To see which traces it currently holds:</p>
+<div class="highlight"><pre><span></span><code>curl http://mf-api-gateway:9090/api/log-service/v1/traces
+</code></pre></div>
+<p>The same lines also appear in each container's own log, so you can search those for the trace ID too.</p>
 <h2 id="related-pages">Related pages<a class="headerlink" href="#related-pages" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../Operations-Monitoring/">Monitoring &amp; Diagnostics</a></li>
