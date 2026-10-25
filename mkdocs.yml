@@ -1,0 +1,108 @@
+site_name: Elastic MDS
+site_description: MetaFluent Elastic MDS documentation
+site_url: https://metafluent.github.io/ElasticMDS-docs/
+copyright: Copyright &copy; MetaFluent
+theme:
+  variant: classic
+  name: material
+  logo: assets/images/logo.svg
+  favicon: assets/images/favicon.svg
+  font:
+    text: Inter
+  features:
+    - navigation.path
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - navigation.instant
+    - navigation.tracking
+    - toc.follow
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle: {icon: material/weather-night, name: Dark mode}
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle: {icon: material/weather-sunny, name: Light mode}
+extra_css:
+  - stylesheets/brand.css
+extra:
+  version:
+    provider: mike
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify {kwds: {case: lower}}
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.details
+plugins:
+  - search
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+# The navigation below is generated from the wiki's _Sidebar.md by tools/import-wiki.py; edit it by hand once the
+# wiki is retired.
+nav:
+  - "Home": index.md
+  - "Getting Started":
+      - "How to Read This Guide": How-to-Read.md
+      - "Quick Start": Quick-Start.md
+      - "What's New in Elastic MDS": Whats-New.md
+  - "Deployment Cookbook":
+      - "Static MDS": Cookbook-Deploy-Static-MDS.md
+      - "Fine-Grained": Cookbook-Deploy-Fine-Grained.md
+      - "Static MDS with Compute": Cookbook-Deploy-Static-Compute.md
+      - "Scalable MDS": Cookbook-Deploy-Scalable.md
+      - "Demo": Cookbook-Deploy-Demo.md
+  - "Concepts":
+      - "Architecture: Basics": Architecture-Basics.md
+      - "Access Control": Access-Control.md
+      - "Architecture: Advanced": Architecture-Advanced.md
+      - "Security: Basics": Security-Basics.md
+      - "Security: Advanced": Security-Advanced.md
+      - "Glossary": Glossary.md
+  - "Configuration":
+      - "Basics": Configuration-Basics.md
+      - "Advanced": Configuration-Advanced.md
+      - "Reference": Configuration-Reference.md
+  - "Configuration Cookbook":
+      - "Configure DACS": Cookbook-Configure-DACS.md
+      - "Slow Consumer Protection": Cookbook-Configure-Slow-Consumer-Protection.md
+      - "Enable Tokens": Cookbook-Enable-Tokens.md
+      - "Enable SSO": Cookbook-Enable-SSO.md
+  - "Deployment":
+      - "Basics": Deployment-Basics.md
+      - "Image Catalog": Image-Catalog.md
+      - "Without Docker": Deployment-Without-Docker.md
+      - "Advanced": Deployment-Advanced.md
+  - "Operations":
+      - "Monitoring & Diagnostics": Operations-Monitoring.md
+      - "Logging": Operations-Logging.md
+      - "Dashboard": Dashboard.md
+      - "Troubleshooting & FAQ": Operations-Troubleshooting.md
+      - "AI-Assisted Troubleshooting": AI-Troubleshooting.md
+      - "API Token Administration": API-Token-Administration.md
+  - "Diagnostic Cookbook":
+      - "Tracing": Diagnostic-Cookbook.md
+  - "Developing Applications":
+      - "JMS": Develop-JMS.md
+      - "Worked Example: SimpleSubscriber": Example-SimpleSubscriber.md
+      - "JDBC": Develop-JDBC.md
+      - "Dynamic Data Conventions": Dynamic-Data-Conventions.md
+      - "Entitlements Context": Entitlements-Context.md
+  - "Reference":
+      - "REST API": REST-API.md
+      - "Log Message Reference": Log-Message-Reference.md
