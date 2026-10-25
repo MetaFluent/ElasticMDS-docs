@@ -7,8 +7,6 @@ you already know how to use Elastic MDS.
 
 Elastic MDS is built on the **StreamLens** integration framework.
 
-> The documentation is being authored in priority order. Tracked in MetaFluent/IssueTracking#586.
-
 ## Start here
 
 **You don't have to read all of this - the guide has a short, role-specific path for each kind of reader.** See [How to Read This Guide](How-to-Read.md) to find yours. The quick version:
