@@ -19,6 +19,9 @@
         <loc>https://metafluent.github.io/ElasticMDS-docs/6.0/Architecture-Basics/</loc>
       </url>
       <url>
+        <loc>https://metafluent.github.io/ElasticMDS-docs/6.0/Architecture-TLS/</loc>
+      </url>
+      <url>
         <loc>https://metafluent.github.io/ElasticMDS-docs/6.0/Configuration-Advanced/</loc>
       </url>
       <url>
@@ -26,6 +29,9 @@
       </url>
       <url>
         <loc>https://metafluent.github.io/ElasticMDS-docs/6.0/Configuration-Reference/</loc>
+      </url>
+      <url>
+        <loc>https://metafluent.github.io/ElasticMDS-docs/6.0/Configuration-TLS/</loc>
       </url>
       <url>
         <loc>https://metafluent.github.io/ElasticMDS-docs/6.0/Cookbook-Configure-DACS/</loc>
@@ -64,6 +70,9 @@
         <loc>https://metafluent.github.io/ElasticMDS-docs/6.0/Deployment-Basics/</loc>
       </url>
       <url>
+        <loc>https://metafluent.github.io/ElasticMDS-docs/6.0/Deployment-TLS/</loc>
+      </url>
+      <url>
         <loc>https://metafluent.github.io/ElasticMDS-docs/6.0/Deployment-Without-Docker/</loc>
       </url>
       <url>
@@ -71,6 +80,9 @@
       </url>
       <url>
         <loc>https://metafluent.github.io/ElasticMDS-docs/6.0/Develop-JMS/</loc>
+      </url>
+      <url>
+        <loc>https://metafluent.github.io/ElasticMDS-docs/6.0/Develop-TLS/</loc>
       </url>
       <url>
         <loc>https://metafluent.github.io/ElasticMDS-docs/6.0/Diagnostic-Cookbook/</loc>
