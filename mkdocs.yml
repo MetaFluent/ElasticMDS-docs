@@ -80,6 +80,7 @@ nav:
       - "Advanced": Configuration-Advanced.md
       - "Reference": Configuration-Reference.md
       - "TLS": Configuration-TLS.md
+      - "Page Feeds": Configuration-Page-Feeds.md
   - "Configuration Cookbook":
       - "Configure DACS": Cookbook-Configure-DACS.md
       - "Slow Consumer Protection": Cookbook-Configure-Slow-Consumer-Protection.md

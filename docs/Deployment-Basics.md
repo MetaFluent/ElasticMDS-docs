@@ -111,6 +111,8 @@ Your configuration lives in the deployment project and is applied each time you 
 
 To run with ETA feeds only, turn the MAMA adapter off with `METAFLUENT_MAMA_DISABLED=true`. The cookbook examples do this, since they run against the ETA simulator.
 
+To publish terminal pages as one field per screen row, see [Configuration: Page Feeds](Configuration-Page-Feeds.md).
+
 ---
 
 ## Building a self-contained image
