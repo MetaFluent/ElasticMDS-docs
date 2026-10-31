@@ -21,12 +21,12 @@ To use a specific milestone, clone its tag instead - for example `-b MILESTONE-v
 The SDK contains:
 
 - `lib/metafluent.jdbc.jar` - the JDBC driver (`com.metafluent.jdbc.rtc.DriverImpl`). Add this one jar to your classpath to build against Elastic MDS.
-- `examples/src/...` - the source for the example applications, including `JDBCTestApp`.
-- `bin/JDBCTestApp.jar` - the example prebuilt, so you can run it without building.
+- `examples/src/...` - the source for the example applications, `FirstQuery` and `JDBCTestApp`.
+- `bin/JDBCTestApp.jar` - both examples prebuilt (with the driver bundled), so you can run them without building.
 
 The driver registers itself, so `DriverManager` finds it automatically. Connection URLs take the form `jdbc:metafluent://<host>:<port>`, where the host and port are those of the session server (default port `8900`). If your environment needs the driver named explicitly, add `-Djdbc.drivers=com.metafluent.jdbc.rtc.DriverImpl`.
 
-To run the prebuilt example against a deployment, give it the session server host and a query:
+To run the prebuilt `JDBCTestApp` against a deployment, give it the session server host and a query:
 
 ```
 java -jar bin/JDBCTestApp.jar -host localhost -head 20 \
@@ -39,52 +39,73 @@ This assumes the session server runs on the same machine. When it runs on a diff
 
 ## A first query
 
-`JDBCTestApp` (in the SDK) is a complete, console-based query client. Its structure is the standard JDBC pattern: get a `Connection`, create a `Statement`, execute a `SELECT`, and read the `ResultSet`.
+`FirstQuery` is the smallest complete MetaFluent JDBC application. Its structure is the standard JDBC pattern: get a `Connection`, create a `Statement`, execute a `SELECT`, and read the `ResultSet`. The code below is the actual example; it is in the SDK at `examples/src/com/metafluent/examples/firstquery/FirstQuery.java`.
 
 ```java
-import java.sql.*;
+package com.metafluent.examples.firstquery;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Properties;
 
+/**
+ * The smallest complete MetaFluent JDBC application: connect, run one SELECT, and redisplay the
+ * live result set once a second. The optional argument is the session server host (default localhost).
+ */
 public class FirstQuery {
-    public static void main(String[] args) throws Exception {
-        Properties props = new Properties();
-        props.setProperty("com.metafluent.jdbc.application-name", "FirstQuery");
-        props.setProperty("com.metafluent.jdbc.application-version", "1.0.0");
-        props.setProperty("com.metafluent.jdbc.user", "guest");
 
-        // The MetaFluent JDBC provider connects through the session server (port 8900).
-        String url = "jdbc:metafluent://localhost:8900";
+	public static void main(String[] args) throws Exception {
+		Properties properties = new Properties();
+		properties.setProperty("com.metafluent.jdbc.application-name", "FirstQuery");
+		properties.setProperty("com.metafluent.jdbc.application-version", "1.0.0");
+		properties.setProperty("com.metafluent.jdbc.user", "guest");
 
-        try (Connection conn = DriverManager.getConnection(url, props);
-             Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
-                                                   ResultSet.CONCUR_UPDATABLE)) {
+		// The MetaFluent JDBC driver connects through the session server (port 8900).
+		String host = args.length > 0 ? args[0] : "localhost";
+		String url = "jdbc:metafluent://" + host + ":8900";
 
-            ResultSet rs = stmt.executeQuery(
-                "SELECT RIC, DSPLY_NAME, BID, ASK, TRDPRC_1 " +
-                "FROM Quotes.RDF WHERE RIC IN ('SAB.L', 'BG.L', 'REX.L', 'WG.L')");
+		try (Connection connection = DriverManager.getConnection(url, properties);
+			 Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+					 ResultSet.CONCUR_UPDATABLE)) {
 
-            // A MetaFluent result set is live. Re-scroll it to see current values.
-            while (true) {
-                rs.beforeFirst();
-                while (rs.next()) {
-                    System.out.printf("%-8s %-24s %10.4f %10.4f %10.4f%n",
-                        rs.getString("RIC"), rs.getString("DSPLY_NAME"),
-                        rs.getDouble("BID"), rs.getDouble("ASK"), rs.getDouble("TRDPRC_1"));
-                }
-                Thread.sleep(1000);   // redisplay once a second
-            }
-        }
-    }
+			ResultSet resultSet = statement.executeQuery(
+					"SELECT RIC, DSPLY_NAME, BID, ASK, TRDPRC_1 " +
+					"FROM Quotes.RDF WHERE RIC IN ('SAB.L', 'BG.L', 'REX.L', 'WG.L')");
+
+			// A MetaFluent result set is live. absolute(0) refreshes it to the current values
+			// and positions it before the first row.
+			while (true) {
+				resultSet.absolute(0);
+				while (resultSet.next()) {
+					System.out.printf("%-8s %-24s %10.4f %10.4f %10.4f%n",
+							resultSet.getString("RIC"), resultSet.getString("DSPLY_NAME"),
+							resultSet.getDouble("BID"), resultSet.getDouble("ASK"), resultSet.getDouble("TRDPRC_1"));
+				}
+				System.out.println();
+				Thread.sleep(1000);   // redisplay once a second
+			}
+		}
+	}
 }
 ```
 
-The example connects to a session server on the same machine. When the session server runs on a different machine, replace `localhost` in the URL with that machine's hostname.
+To run it against a session server on the same machine:
+
+```
+java -cp bin/JDBCTestApp.jar com.metafluent.examples.firstquery.FirstQuery
+```
+
+When the session server runs on a different machine, give its hostname as the argument (`... FirstQuery myhost`). The four rows are redisplayed once a second as the market moves; press `Ctrl+C` to stop.
+
+For the full command-line query tool, see [Worked Example: JDBCTestApp](Example-JDBCTestApp.md).
 
 ---
 
 ## Live results
 
-Notice the `Statement` is created `TYPE_SCROLL_SENSITIVE`. That is what makes the difference: the result set stays open and its rows reflect the live content, so re-reading it (`beforeFirst()` then `next()`, or `absolute(...)`) shows the current market rather than a one-time snapshot. A query is a standing view over the content, not a point-in-time fetch. Close the `ResultSet` (or the `Connection`) when you no longer need the data.
+Notice the `Statement` is created `TYPE_SCROLL_SENSITIVE`. That is what makes the difference: the result set stays open and its rows reflect the live content, so re-reading it shows the current market rather than a one-time snapshot. To re-read, call `absolute(0)`: it refreshes the rows to their current values and positions the cursor before the first row, and you then step through with `next()` as usual. A query is a standing view over the content, not a point-in-time fetch. Close the `ResultSet` (or the `Connection`) when you no longer need the data.
 
 ---
 
@@ -121,6 +142,7 @@ The view is live like any other content: its rows update as the underlying marke
 ## Where to go next
 
 - [JMS Application Development](Develop-JMS.md) - subscribe to the same content and stream it.
+- [Worked Example: JDBCTestApp](Example-JDBCTestApp.md) - the full command-line query tool, section by section.
 - [Developing with TLS](Develop-TLS.md) - connect over TLS.
 - [Dynamic Data Conventions](Dynamic-Data-Conventions.md) - the field and content model behind the tables you query.
 - [Architecture: Basics](Architecture-Basics.md) - the model behind the API.
