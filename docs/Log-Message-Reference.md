@@ -27,6 +27,12 @@ The messages originate in each component's `WARNING`/`SEVERE` log statements, so
 
 ## By component
 
+### Content adapters
+
+| Message | Level | Meaning | Action |
+|---------|-------|---------|--------|
+| `MF-ADP-032` The relay has found no tables at its source cluster &lt;address&gt; after waiting &lt;seconds&gt; seconds (the last poll &lt;lastPoll&gt;); it relays nothing yet and keeps waiting. Check that the source cluster's gateway at &lt;address&gt; and its projectors are running and serving tables. | `WARNING` | Once its session to the source cluster is up, the relay waits for the source's tables before it starts relaying. Its polls of the source have returned no tables, or failed, for another warning interval. It keeps polling with no time limit, repeats this warning after each further interval, and starts relaying by itself when the first table appears; no restart is needed. | Check that the source cluster is up and publishing tables: its gateway at the named address is running and reachable from this node, and its projectors are running with their tables set up. The detail lines under the same code name what the last poll asked and its answer or failure. |
+
 > Sections are added as they are catalogued. Template for a new component:
 
 ### &lt;Component name&gt; (`<logger name>`)
