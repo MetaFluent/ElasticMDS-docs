@@ -67,6 +67,14 @@ The push, refresh, pub-sub and relational servers that serve clients.
 
 > Sections are added as they are catalogued. Template for a new component:
 
+### Client libraries
+
+These messages are written to the application's own log by the MetaFluent client library it uses (JDBC, JMS), not by a server.
+
+| Message | Level | Meaning | Action |
+|---------|-------|---------|--------|
+| `MF-RFR-007` A client has not reconnected to the relational query server &lt;server&gt; for &lt;seconds&gt; seconds, so changes to where its query results are served, and the moves of their rows, are held up. Check that the relational query server is running and that the client can reach it. | `WARNING` | The client lost its connection to the relational query server and has been reconnecting since. Its query results keep updating over their own connections, but the client cannot learn where their rows move, so those moves wait for it. The client keeps reconnecting for as long as its session lasts and recovers its queries when it succeeds; this message is written once per outage. | Check that the relational query server is running and that the client can reach its address; the detail line that follows names the server, the attempts so far and the last failure. |
+
 ### &lt;Component name&gt; (`<logger name>`)
 
 | Message | Level | Meaning | Action |
