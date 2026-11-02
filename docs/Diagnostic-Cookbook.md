@@ -13,7 +13,7 @@ Task-keyed diagnostic operations: the exact command for a specific diagnostic ac
 
 ## Tracing
 
-A trace records the internal handling of sessions, statements, and orchestration for a running session server. You start a trace, list the active ones, renew or stop them, and read the output in the logs. Every trace stops by itself after a limited time, so detailed tracing stays affordable.
+A trace records the internal handling of sessions, statements, content, shards, orchestration, and the client libraries for a running session server. You start a trace, list the active ones, renew or stop them, and read the output in the logs. Every trace stops by itself after a limited time, so detailed tracing stays affordable.
 
 Trace operations are addressed to the session-server API. The `*` element reaches the active session server; standby servers do not expose this API.
 
@@ -33,6 +33,7 @@ The response is the new trace ID.
 | `user`, `application`, `position` | Select the sessions to trace. |
 | `table` | Narrow the trace to a table, as `catalog.schema.table`. |
 | `key` | Narrow the trace to a key. |
+| `id` | Narrow the trace to one ID that the traced items carry: a session, statement, shard, content, or connection ID. |
 | `component` | Select a component, such as a projector. |
 | `minutes` | How long the trace runs (see [Durations](#durations)). |
 
@@ -50,7 +51,7 @@ Names and levels are case-sensitive. An unknown name or level is rejected with a
 orchestration:SHARD_CONTENT_BINDING:VERBOSE,orchestration:REQUEST
 ```
 
-The `orchestration` subsystem provides categories today, and further subsystems are added over time. To list the subsystems and categories, each with its cost (`LIGHT` or `PER_ITEM`), a description, and the duration limits:
+The subsystems with categories are `orchestration`, `query`, `adapter`, `synthetic`, `distribution`, `push`, `refresh`, `session`, `client`, `fabric`, and `io`, and further categories are added over time. To list the subsystems and categories, each with its cost (`LIGHT` or `PER_ITEM`), a description, and the duration limits:
 
 ```
 curl http://mf-api-gateway:9090/api/session-server/v1/*/traceCategories
@@ -58,7 +59,7 @@ curl http://mf-api-gateway:9090/api/session-server/v1/*/traceCategories
 
 ### Selecting what to trace
 
-The `user`, `application`, and `position` fields select sessions; `table` and `key` narrow a trace to content; `component` selects a component such as a projector. Every field is optional, an omitted field matches everything, and matching is exact. Fields combine - for example, user `alice` on table `md.quotes.rdf`. When several traces match a session, all of them apply.
+The `user`, `application`, and `position` fields select sessions; `table` and `key` narrow a trace to content; `id` narrows it to the items that carry one session, statement, shard, content, or connection ID; `component` selects a component such as a projector. Every field is optional, an omitted field matches everything, and matching is exact. Fields combine - for example, user `alice` on table `md.quotes.rdf`. When several traces match a session, all of them apply.
 
 ### Durations
 
@@ -67,8 +68,8 @@ Every trace runs for a limited time and then stops by itself. If you omit `minut
 | Tier | What it covers | Default | Maximum |
 |---|---|---|---|
 | `LIGHT` | Only light categories at basic detail | 15 minutes | 60 minutes |
-| `HEAVY_NARROW` | Any per-item category or verbose detail, with a user, table, or key | 5 minutes | 30 minutes |
-| `HEAVY_BROAD` | Per-item or verbose detail with no user, table, or key | 2 minutes | 5 minutes |
+| `HEAVY_NARROW` | Any per-item category or verbose detail, with a user, table, key, or ID | 5 minutes | 30 minutes |
+| `HEAVY_BROAD` | Per-item or verbose detail with no user, table, key, or ID | 2 minutes | 5 minutes |
 
 The limits are settings in the session server's configuration: `server.traceLightDefaultMinutes`, `server.traceLightMaximumMinutes`, `server.traceHeavyNarrowDefaultMinutes`, `server.traceHeavyNarrowMaximumMinutes`, `server.traceHeavyBroadDefaultMinutes`, and `server.traceHeavyBroadMaximumMinutes`.
 
@@ -104,6 +105,12 @@ Each trace line in the logs starts with the category and the full trace ID, foll
 
 ```
 TRACE [subsystem.CATEGORY] [traceID=<full trace ID>] ...
+```
+
+A line that belongs to something done over time - a placement, a rebalance, a drain - also carries `[activity=<id>:<PHASE>]` after the trace ID. All the lines of one activity share the same `<id>`, and `<PHASE>` is `START`, `STEP`, or `END`, so you can follow an activity from its start to its end:
+
+```
+TRACE [subsystem.CATEGORY] [traceID=<full trace ID>] [activity=<id>:START] ...
 ```
 
 The log service collects a trace's records from every container. To read them, newest first:
