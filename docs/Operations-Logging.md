@@ -58,8 +58,8 @@ curl -s "http://mf-api-gateway:9090/api/log-service/v1/queryLogs?logger=com.meta
 ```json
 [
   { "ln": "com.metafluent.blueprint.rtc.content.adapter.eta",
-    "c": "...ETAContentAdapter", "m": "handleConnectionDown", "l": "WARNING",
-    "msg": "ETATableAdapter Default.Quotes.RDF marking relevant content stale because: ETA Connection ... SocketChannel.read returned -1 (end-of-stream)",
+    "c": "...ETAAdapterManager", "m": "handleChannelDown", "l": "WARNING",
+    "msg": "[MF-ADP-030] The connection to upstream provider eta-server-host:14002 is down; 120 rows of 2 tables are marked stale until it reconnects. Check the upstream provider eta-server-host:14002 and the network path to it. Reference MF-ADP-030/7Q4K.",
     "sID": "9f9e8615-0ea8-483f-ada6-42c924860f7f", "s": 1784215998, "n": 152928332 }
 ]
 ```
@@ -142,8 +142,8 @@ curl -s "http://mf-api-gateway:9090/api/application-state/v1/*/name,state,info"
 curl -s "http://mf-api-gateway:9090/api/log-service/v1/queryLogs?logger=com.metafluent.blueprint.rtc.content.adapter.eta&limit=20"
 ```
 ```
-WARNING  handleConnectionDown  ETATableAdapter Default.Quotes.RDF marking relevant content stale because: ETA Connection ... SocketChannel.read returned -1 (end-of-stream)
-INFO     connect               Attempting to connect to server eta-server-host:14002 ...
+WARNING  handleChannelDown    [MF-ADP-030] The connection to upstream provider eta-server-host:14002 is down; 120 rows of 2 tables are marked stale until it reconnects. Check the upstream provider eta-server-host:14002 and the network path to it. Reference MF-ADP-030/7Q4K.
+INFO     connect              Attempting to connect to server eta-server-host:14002 ...
 ```
 
 State tells you *what* is wrong and *which part*; the logs tell you *why*, in the component's own words.

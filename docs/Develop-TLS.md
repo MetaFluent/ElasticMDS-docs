@@ -102,13 +102,13 @@ When a setting appears both as a URL parameter and as a connection property, the
 
 ## The browser JavaScript client over wss://
 
-A browser client connects to a server's WebSocket listener with a `wss://` address in place of `ws://`:
+A browser client starts at the session server's WebSocket listener (port 8950 by default) and uses a `wss://` address in place of `ws://`:
 
 ```
-wss://mds.example.com:8750
+wss://mds.example.com:8950
 ```
 
-The browser checks the server's certificate against its own trust store, so a certificate from a public CA works as it stands. For an internal authority, install that authority's certificate in the browser or the operating system's trust store, as for any other internal HTTPS site. The certificate must name the host in the address, and a page served over HTTPS connects to `wss://` addresses.
+The browser checks the server's certificate against its own trust store, so a certificate from a public CA works as it stands. For an internal authority, install that authority's certificate in the browser or the operating system's trust store, as for any other internal HTTPS site. The certificate must name the host in the address, and a page served over HTTPS connects to `wss://` addresses. Your operator allows the origin of your page with `METAFLUENT_WEB_ORIGINS`; a browser connection from an origin that is not allowed is refused with HTTP 403 (see [Configuration: TLS](Configuration-TLS.md#websocket-listeners)).
 
 ---
 
