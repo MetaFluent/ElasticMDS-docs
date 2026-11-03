@@ -1,7 +1,5 @@
 # Log Message Reference
 
-> **In preparation.** This catalog is being built out per component and grows over time.
-
 When a deployment emits a `WARNING` or `SEVERE` log message, this page tells you what it means and what to do about it. It is a lookup, not a manual - go straight to the component that logged the message.
 
 **Finding the component.** Every log record carries the **logger name** (the `ln` field - see [Operations: Logging](Operations-Logging.md)); that name identifies the component and matches a section below. Every alert message also begins with its message ID, which names the component too. `SEVERE` means system-down; `WARNING` means an error the system is operating through.
@@ -21,7 +19,7 @@ One section per component. Within each, a row per message the component can emit
 | **Meaning** | What the condition is |
 | **Action** | What an operator should do about it |
 
-The messages originate in each component's `WARNING`/`SEVERE` log statements, so the catalog is refreshed by sweeping the components' sources - and a new component simply adds its own section.
+The tables are produced from the product's own message definitions, so each release's page lists every `WARNING` that release can log, with the wording the log shows.
 
 ---
 
