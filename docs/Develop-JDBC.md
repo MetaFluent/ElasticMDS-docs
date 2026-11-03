@@ -109,6 +109,67 @@ Notice the `Statement` is created `TYPE_SCROLL_SENSITIVE`. That is what makes th
 
 ---
 
+## Data state: rows and statements
+
+Live data can be degraded for a while: a source disconnects, or part of the cluster is recovering. The driver tells you in two ways, one for each row and one for the statement as a whole.
+
+### Each row's state
+
+Every row carries its own state in two columns, `_STATE` and `_STATE_TEXT`. Select them by name to see them; `SELECT *` returns the table's columns without them:
+
+```java
+ResultSet resultSet = statement.executeQuery(
+		"SELECT RIC, BID, ASK, _STATE, _STATE_TEXT " +
+		"FROM Quotes.RDF WHERE RIC IN ('SAB.L', 'BG.L')");
+```
+
+`_STATE` is a byte code and `_STATE_TEXT` says why, for display:
+
+| `_STATE` | State | Meaning |
+|---|---|---|
+| 1 | OK | The row is current. |
+| 2 | STALE | The row's values may not be current. It stays readable, and it becomes OK again by itself when its data recovers. |
+| 3 | INVALID | The row's item can never be served, for example a key the source does not know. Correct the query rather than waiting for the row. |
+| 4 | DENIED | You are not entitled to the row's content. This can change while the query runs, as entitlements change. |
+| 5 | CLOSED | The source closed the row's item. It may become available again later. |
+
+These are the same states a JMS stream carries; see [Dynamic Data Conventions](Dynamic-Data-Conventions.md#stream-state).
+
+A row goes STALE when its source marks the item stale (a row joined to a stale item goes STALE with it), or when the driver cannot refresh the rows from their server. Each recovers by itself: the source sends the item again, or the next refresh succeeds. Act on the code and display the text; the text is for people, not for parsing.
+
+```java
+resultSet.absolute(0);
+while (resultSet.next()) {
+	boolean stale = resultSet.getByte("_STATE") == 2;
+	System.out.printf("%-8s %10.4f %10.4f %s%n", resultSet.getString("RIC"),
+			resultSet.getDouble("BID"), resultSet.getDouble("ASK"),
+			stale ? "STALE: " + resultSet.getString("_STATE_TEXT") : "");
+}
+```
+
+Row state is the signal for everyday interruptions. A query that does not select `_STATE` reads the same rows and values; it just does not see their state.
+
+### The statement's state
+
+Elastic MDS also reports on the statement as a whole. You do not need to select anything to see it:
+
+- **Degraded.** `ResultSet.getWarnings()` returns a `SQLWarning`, "The statement's result is degraded: ...", with the reason. The rows stay readable. The warning goes away by itself when the statement is OK again, and `clearWarnings()` hides it until a different warning arises.
+- **Failed.** The next use of the result set throws a `SQLException`, "The statement failed after it was acknowledged: ...", with the reason. A failed statement does not recover: close the result set and run the query again if you still need the data.
+
+A good pattern is to check `getWarnings()` each time you refresh the result set, and to treat a `SQLException` from the result set as the end of that query.
+
+### Connection interruptions
+
+The driver recovers from a lost connection by itself, for as long as the session lasts; your `ResultSet` keeps working and needs no action from your application.
+
+- While the driver reconnects, rows keep updating, and neither the rows nor the statement change state because of the interruption alone. If a row's data cannot be refreshed in the meantime, that row goes STALE and recovers as described above.
+- If Elastic MDS has to start your statement again after the interruption, the rows you already have stay readable, marked STALE, until the restarted statement's rows replace them.
+- The driver writes an INFO line to your application's log when it loses the connection and when it reconnects. If an interruption lasts longer than the session's retry limit allows, it also logs one WARNING, `MF-RFR-007` (see the [Log Message Reference](Log-Message-Reference.md)).
+
+When the session itself ends, its statements end with it: a statement already answered fails (the next use of the result set throws a `SQLException`, "The statement failed after it was acknowledged: The session ended: ..."), and an `executeQuery` still waiting for its answer throws.
+
+---
+
 ## The SQL you can use
 
 Elastic MDS accepts **a subset of SQL-92** - a read-only query surface (`SELECT` and `CREATE VIEW ... SELECT`; there is no `INSERT`/`UPDATE`/`DELETE` of content). What is supported:
