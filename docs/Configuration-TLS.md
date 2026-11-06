@@ -143,7 +143,7 @@ The TLS profiles and the internal HTTP setting are carried by two components wit
 | `com.metafluent.blueprint.datafabric` | `server.tlsPeerName` | empty | The name every fabric node's mesh certificate carries, for example `fabric.internal`. Peers are verified against it. Needed when `server.outboundTls` is `required`. |
 | `com.metafluent.blueprint.rtc.content.common` | `childResultReaderFactory.tls` | `off` | TLS for reading other nodes' results: `off` or `required:<profile>`. Orchestration then places those reads on listeners that serve TLS. |
 | `com.metafluent.blueprint.rtc.query.proxy.authnz` | `entitlementsContextConnection.tls` | `off` | TLS for the session with the entitlements server. |
-| `com.metafluent.blueprint.rtc.content.adapter.mfpubsub` | `pubsubContent.tls` | `off` | TLS for the pub-sub adapter's session with the data tier and its REST calls to it (TLS and HTTPS when required). |
+| `com.metafluent.blueprint.rtc.content.adapter.mfpubsub` | `pubsubContent.tls` | `off` | TLS for the pub-sub adapter's session with the data tier (TLS when required). Its calls to the API gateway follow `internalHttp.tls`. |
 
 The environment variables are `METAFLUENT_TLS_PROFILES_DESCRIPTOR`, `METAFLUENT_TLS_RELOAD_INTERVAL_SECONDS` and `METAFLUENT_INTERNAL_HTTP_TLS`.
 
