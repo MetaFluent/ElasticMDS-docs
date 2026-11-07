@@ -46,7 +46,7 @@ Each file is organised by **bean** (a configurable object within the component),
 server.default=8900
 ```
 
-These files are the **"what does it mean"** reference - the descriptions live here, in the image, not in the wiki, so they always match the version you are running. Extract them with plain Docker:
+These files are the **"what does it mean"** reference - the descriptions live here, in the image, so they always match the version you are running. Extract them with plain Docker:
 
 ```
 # Copy every annotated file out of a running container:
