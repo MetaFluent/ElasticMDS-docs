@@ -1,0 +1,53 @@
+/* MetaFluent brand colors, as used on metafluent.com. */
+:root {
+  --mf-blue: #2f308d;
+  --mf-darkblue: #0c0d47;
+  --mf-midblue: #6480c4;
+  --mf-lightblue: #87b5e8;
+  --mf-fadeblue: #c3cef3;
+}
+
+/* Headings in MetaFluent's heading face, as on metafluent.com (only the bold face exists). */
+@font-face {
+  font-family: "Alte Haas Grotesk";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/AlteHaasGroteskBold.woff2") format("woff2");
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-header__topic {
+  font-family: "Alte Haas Grotesk", var(--md-text-font-family);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+[data-md-color-scheme="default"] .md-typeset h1,
+[data-md-color-scheme="default"] .md-typeset h2 {
+  color: var(--mf-darkblue);
+}
+
+[data-md-color-primary="custom"] {
+  --md-primary-fg-color: var(--mf-blue);
+  --md-primary-fg-color--light: var(--mf-midblue);
+  --md-primary-fg-color--dark: var(--mf-darkblue);
+  --md-primary-bg-color: #ffffff;
+}
+
+[data-md-color-accent="custom"] {
+  --md-accent-fg-color: var(--mf-midblue);
+  --md-accent-fg-color--transparent: rgba(100, 128, 196, 0.1);
+}
+
+[data-md-color-scheme="default"] {
+  --md-typeset-a-color: var(--mf-blue);
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: var(--mf-darkblue);
+  --md-typeset-a-color: var(--mf-lightblue);
+  --md-accent-fg-color: var(--mf-fadeblue);
+}
