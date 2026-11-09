@@ -24,7 +24,7 @@ A table reads no rows when it starts, only its columns and its row count. Rows a
 |---|---|
 | `Schema`, `Table` | The table's name. Required; a point or region set gives `Table` only. |
 | `URL` | The dataset's resource URL, `.../resource/<id>.json`. Required. |
-| `Key` | The column that identifies a row. Defaults to the Socrata row identifier, `:id`. Always a STRING field. |
+| `Key` | The column that identifies a row. Defaults to the Socrata row identifier, `:id`. Always a STRING field: a row's key is the column's value as Socrata returns it, for a number column the number without trailing or leading zeros (`8`, not `8.0` or `08`). |
 | `Columns` | Optional list of columns, each with `Name`, `FieldType` (STRING, DECIMAL, BOOLEAN, INTEGER, LONG or DOUBLE) and an optional `SizeHint`. Without it, every mappable column is exposed. |
 | `DateTimeField` | The column that `TimeRangeStart` and `TimeRangeEnd` apply to. |
 | `TimeRangeStart`, `TimeRangeEnd` | The table holds only the rows in this time range. |
