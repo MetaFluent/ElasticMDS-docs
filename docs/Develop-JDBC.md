@@ -176,7 +176,7 @@ Elastic MDS accepts **a subset of SQL-92** - a read-only query surface (`SELECT`
 
 - **Select list:** columns, `*`, `table.*`, column aliases with `AS`, arithmetic (`+ - * / %`), library functions such as `MFMath.AVG(BID, ASK) AS MID`, and a scalar sub-select of one column, alone or as an operand, such as `BID - (SELECT BID FROM Quotes.RDF WHERE RIC = 'VOD.L') AS VS_VOD`.
 - **`WHERE`:** `= <> < <= > >=`, `[NOT] LIKE`, `[NOT] BETWEEN`, `IS [NOT] NULL`, `[NOT] IN` over a list or a sub-select, `[NOT] EXISTS (SELECT ...)`, and a comparison with a scalar sub-select, combined with `AND`, `OR`, `NOT` and parentheses.
-- **Joins:** `JOIN` / `INNER JOIN` or `LEFT JOIN`, each with an `ON` of one equality. The equality is on the joined table's key, and either the other table's key or a column of it (a foreign key). Several joins may chain through earlier joined tables.
+- **Joins:** `JOIN` / `INNER JOIN` or `LEFT JOIN`, each with an `ON` of one equality. The equality is on the joined table's key, and either the other table's key, a column of it (a foreign key), or an expression over the `FROM` table's columns, such as a library function. Several joins may chain through earlier joined tables.
 - **Derived tables:** `FROM (SELECT ...) AS d`.
 - **Grouping:** `GROUP BY` columns or expressions, the aggregates `SUM`, `AVG`, `COUNT` (including `COUNT(DISTINCT ...)`), `MIN` and `MAX`, `HAVING`, and `SELECT DISTINCT`.
 - **Ordering and limits:** `ORDER BY` columns, expressions, aliases or select-list positions, `ASC` or `DESC`; `LIMIT`, `OFFSET`, `TOP` and `FETCH FIRST`. `Statement.setMaxRows` also limits the rows; the smaller limit applies.
@@ -228,6 +228,7 @@ The view is live like any other content: its rows update as the underlying marke
 - [JMS Application Development](Develop-JMS.md) - subscribe to the same content and stream it.
 - [Worked Example: JDBCTestApp](Example-JDBCTestApp.md) - the full command-line query tool, section by section.
 - [Developing with TLS](Develop-TLS.md) - connect over TLS.
+- [Geospatial Functions (MFGeo)](Develop-Geospatial.md) - distance, region and nearest-point functions in SQL, including as join keys.
 - [Dynamic Data Conventions](Dynamic-Data-Conventions.md) - the field and content model behind the tables you query.
 - [Architecture: Basics](Architecture-Basics.md) - the model behind the API.
 - [Glossary](Glossary.md) - definitions of the terms used here.
