@@ -174,15 +174,38 @@ When the session itself ends, its statements end with it: a statement already an
 
 Elastic MDS accepts **a subset of SQL-92** - a read-only query surface (`SELECT` and `CREATE VIEW ... SELECT`; there is no `INSERT`/`UPDATE`/`DELETE` of content). What is supported:
 
-- **Projections:** columns, `*`, `table.*`, column aliases with `AS`, arithmetic (`+ - * /`), aggregates (`SUM`, `AVG`, `COUNT`, `MIN`, `MAX`), and library functions such as `MFMath.AVG(BID, ASK) AS MID`.
-- **`WHERE`:** `= <> < <= > >=`, `LIKE` / `NOT LIKE`, `IN` / `NOT IN`, combined with `AND` / `OR`.
-- **Joins:** a single equi-join between primary keys (`a.key = b.key`).
-- **`GROUP BY`, `ORDER BY`.**
+- **Select list:** columns, `*`, `table.*`, column aliases with `AS`, arithmetic (`+ - * / %`), library functions such as `MFMath.AVG(BID, ASK) AS MID`, and a scalar sub-select of one column, alone or as an operand, such as `BID - (SELECT BID FROM Quotes.RDF WHERE RIC = 'VOD.L') AS VS_VOD`.
+- **`WHERE`:** `= <> < <= > >=`, `[NOT] LIKE`, `[NOT] BETWEEN`, `IS [NOT] NULL`, `[NOT] IN` over a list or a sub-select, `[NOT] EXISTS (SELECT ...)`, and a comparison with a scalar sub-select, combined with `AND`, `OR`, `NOT` and parentheses.
+- **Joins:** `JOIN` / `INNER JOIN` or `LEFT JOIN`, each with an `ON` of one equality. The equality is on the joined table's key, and either the other table's key or a column of it (a foreign key). Several joins may chain through earlier joined tables.
+- **Derived tables:** `FROM (SELECT ...) AS d`.
+- **Grouping:** `GROUP BY` columns or expressions, the aggregates `SUM`, `AVG`, `COUNT` (including `COUNT(DISTINCT ...)`), `MIN` and `MAX`, `HAVING`, and `SELECT DISTINCT`.
+- **Ordering and limits:** `ORDER BY` columns, expressions, aliases or select-list positions, `ASC` or `DESC`; `LIMIT`, `OFFSET`, `TOP` and `FETCH FIRST`. `Statement.setMaxRows` also limits the rows; the smaller limit applies.
+- **`UNION` and `UNION ALL`** of `SELECT`s from tables, with an `ORDER BY` or `LIMIT` over the whole union.
 - **`CREATE VIEW ... SELECT`** (see below).
 
-Some standard SQL is **not** supported, and a few clauses are accepted by the parser but do nothing - so avoid relying on them: `HAVING`, `DISTINCT`, `BETWEEN`, `IS [NOT] NULL`, `CASE`, `CAST`, subqueries, outer joins, joins of three or more tables, and `UNION` / `INTERSECT` / `EXCEPT`. The exact, exhaustive grammar will be covered in the SQL reference.
+Not supported: `CASE`, `CAST`, the `||` operator, `INTERSECT` / `EXCEPT`, `RIGHT` and `FULL OUTER JOIN`, `CROSS` and `NATURAL` joins, comma joins and `JOIN ... USING`. A statement that uses something outside the subset fails: `executeQuery` throws an `SQLException` whose message names what is not supported.
 
 The row key is available as the column `_KEY` (often aliased, e.g. `SELECT _KEY AS RIC, ...`). Table names are schema-qualified (`Quotes.RDF`) - the same content model described in [Dynamic Data Conventions](Dynamic-Data-Conventions.md).
+
+---
+
+## Browsing the tables
+
+Tools that browse a database through `DatabaseMetaData` see the tables you can query. `getCatalogs`, `getSchemas`, `getTableTypes` and `getTables` return every table, narrowed by the names and patterns you pass, as the JDBC documentation describes.
+
+`getColumns` returns the columns of tables with a fixed set of columns, such as tables read from a relational database or from files. A market-data table such as `Quotes.RDF` is listed by `getTables`, and `getColumns` returns no columns for it: its fields are those of the [content model](Dynamic-Data-Conventions.md).
+
+```java
+DatabaseMetaData metadata = connection.getMetaData();
+try (ResultSet columns = metadata.getColumns(null, null, "%", null)) {
+	while (columns.next()) {
+		System.out.printf("%s.%s %-16s %s%n", columns.getString("TABLE_SCHEM"), columns.getString("TABLE_NAME"),
+				columns.getString("COLUMN_NAME"), columns.getString("TYPE_NAME"));
+	}
+}
+```
+
+The other `DatabaseMetaData` calls that return a result set, such as `getPrimaryKeys` and `getIndexInfo`, throw `SQLFeatureNotSupportedException`.
 
 ---
 
