@@ -39,9 +39,11 @@ A stream's state is carried in the `JMS_METAFLUENT_STATE` property. It is option
 |-------|---------|
 | **OK** | The data for this stream is current. |
 | **STALE** | The data is suspect (for example, the source has disconnected). The provider will try to recover the stream with a fresh image - **do not re-subscribe**. |
-| **DENIED** | The requester is not entitled to the content. It can arrive on the initial request or later (entitlements changed). For a single-stream topic, close the subscription. |
-| **INVALID** | The request is erroneous and can never be satisfied. Do not resubmit it. |
-| **CLOSED** | The stream has been closed. It may become available later, so re-opening it at some later time is reasonable. |
+| **DENIED** | The requester is not entitled to the content. It can arrive on the initial request or later (entitlements changed). The stream has ended for this subscription. For a single-stream topic, close the subscription. It does not resume if the entitlement is granted later; subscribe again to get the content. |
+| **INVALID** | The request is erroneous and can never be satisfied. The stream has ended for this subscription. Do not resubmit it. |
+| **CLOSED** | The stream has ended for this subscription. It may become available later, so subscribing again at some later time is reasonable. |
+
+OK and STALE are the states of a live stream. A stream that has reported INVALID, DENIED or CLOSED has ended for that subscription and delivers nothing more; to get the content again, subscribe again, and the new subscription is checked afresh.
 
 Rules that always hold:
 
@@ -78,7 +80,7 @@ A **multi-stream topic** delivers several data streams over a single subscriptio
 - **Adding a stream** - a `STREAM_UPDATE` with a new id and its next/previous ids.
 - **Removing a stream** - a `STATUS` message with state `CLOSED` for that stream; reconnect its neighbours and reassign head/tail as needed.
 
-**Per-stream state.** Each stream in a collection follows the same state model as a single-stream topic, and a `STREAM_UPDATE` is always the first message for a stream. A stream marked `DENIED` is still part of the underlying collection but is not visible to this application - continue to maintain it. A status message with **no** stream id applies to the collection as a whole (for example, when the subscriber is not entitled to the collection itself).
+**Per-stream state.** Each stream in a collection follows the same state model as a single-stream topic, and a `STREAM_UPDATE` is always the first message for a stream. A stream marked `DENIED` is still part of the underlying collection but is not visible to this application - continue to maintain it. `STREAM_UPDATE` messages continue to arrive for a stream that has ended, so the collection's order stays correct. A status message with **no** stream id applies to the collection as a whole (for example, when the subscriber is not entitled to the collection itself).
 
 An application that does not need the collection's structure can ignore the `STREAM_UPDATE` messages and process only the stream data.
 

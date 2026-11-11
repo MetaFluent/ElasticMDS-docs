@@ -34,7 +34,7 @@ The authorization framework:
 
 1. **Read access** is controlled at the **item / row** level.
 2. **Write access** is controlled at the **item / row** level.
-3. Access control is **live** - a client's read or write access can be **refreshed at any time**, so entitlements can be granted or revoked while the client stays connected.
+3. Access control is **live** - a client's read or write access can be **refreshed at any time**, so a revoked entitlement takes effect for clients that stay connected - they are told `DENIED` and receive no more of that content - and a granted entitlement takes effect for subscriptions made after it.
 
 *Advanced: within some adapters the entitlements binding is finer still - per table - so different tables served by one adapter can be governed by different entitlements services.*
 

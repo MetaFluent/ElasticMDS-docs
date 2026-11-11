@@ -130,7 +130,7 @@ ResultSet resultSet = statement.executeQuery(
 | 1 | OK | The row is current. |
 | 2 | STALE | The row's values may not be current. It stays readable, and it becomes OK again by itself when its data recovers. |
 | 3 | INVALID | The row's item can never be served, for example a key the source does not know. Correct the query rather than waiting for the row. |
-| 4 | DENIED | You are not entitled to the row's content. This can change while the query runs, as entitlements change. |
+| 4 | DENIED | You are not entitled to the row's content. A row that has been reported DENIED stays DENIED for that statement, even if the entitlement is granted later; run the query again to read it. |
 | 5 | CLOSED | The source closed the row's item. It may become available again later. |
 
 These are the same states a JMS stream carries; see [Dynamic Data Conventions](Dynamic-Data-Conventions.md#stream-state).
