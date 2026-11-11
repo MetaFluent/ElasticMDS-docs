@@ -130,6 +130,18 @@ The push, refresh, pub-sub and relational servers that serve clients.
 | `MF-SES-006` Clients cannot sign in or resume their sessions because no query servers are registered with the session server. Check that the query servers (relational and pub-sub) are running and can reach the cluster. | `WARNING` | The session server has no query servers to offer clients, so every sign-in and session resume is refused until one registers. Clients retry. | Check that the query servers (relational and pub-sub) are deployed, running and joined to the cluster; once one registers, clients sign in again without intervention. |
 <!-- generated: session-server end -->
 
+### Authentication and authorization controllers
+
+The file-based controllers that decide who may sign in and what each user may read and write, from a users file and a permissions file.
+
+<!-- generated: security-controllers begin -->
+| Message | Level | Meaning | Action |
+|---------|-------|---------|--------|
+| `MF-SEC-001` Data for item &lt;item&gt; of &lt;table&gt; is not served because its entitlement code could not be read as a number: &lt;code&gt;. Check the entitlement code field the source carries for that item. | `WARNING` | The source's entitlement code field for the item holds something that is not a number, so the item's permissions cannot be decided for anyone. Clients that subscribe to it are told the data is unavailable, with the text "Authorization unavailable", and not that access was denied. The message is logged once for the item and value; repeats within a minute are counted, not logged. An item whose code field is empty is not a fault: it is served by the name grants for its table alone. | Check the entitlement code field the source carries for the named item and correct it at the source. Once an image with a numeric code arrives, subscriptions made after it are served; applications that were told the data is unavailable subscribe again. |
+| `MF-SEC-002` A data server could not be told that a user's permissions changed, so the data it serves that user may not be checked again. | `WARNING` | A permissions reload (or a forced re-authentication) told each data server holding a principal for the user that it is invalid, and one of them failed while taking the notice. The other data servers were told; the one that failed may go on serving the user under the permissions it holds. Repeats within a minute are counted, not logged. | Report it to MetaFluent support with the log around the message; the detail line that follows it names the controller, the user, the position and the failure. |
+| `MF-SEC-003` The permissions file &lt;file&gt; could not be loaded (&lt;reason&gt;), so the permissions already in force are kept. Check the file at the line the reason names. | `WARNING` | The permissions file was edited or reloaded and does not parse, or cannot be read. Nothing of it was taken: the permissions in force before the reload stay in force and no user is re-authorized. At start, with nothing in force before, every user is refused until the file loads. | Check the file at the line the reason names (the format is `NAME:user:service:item-expression:permission` or `CODE:user:service:code-expression:permission`) and save it again; the controller reloads it. |
+<!-- generated: security-controllers end -->
+
 ### Push server
 
 <!-- generated: push-server begin -->
