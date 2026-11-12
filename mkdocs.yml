@@ -110,7 +110,8 @@ nav:
           - "Worked Example: JDBCTestApp": Example-JDBCTestApp.md
       - "JS":
           - "Overview": Develop-JS.md
-          - "Worked Example: smart-refresh-demo": Example-smart-refresh-demo.md
+          - "Worked Example: smart-refresh-demo (command line)": Example-smart-refresh-demo.md
+          - "Worked Example: Smart Refresh Web Demo (browser)": Example-Smart-Refresh-Web-Demo.md
       - "Content Model":
           - "Market Data Context": Dynamic-Data-Conventions.md
           - "Entitlements Context": Entitlements-Context.md
