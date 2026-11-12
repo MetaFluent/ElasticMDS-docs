@@ -17,19 +17,20 @@ release (a version drop-down in the header).
 
 ## Branches and versions
 
-- `dev` holds the documentation for the next release; changes go on a task branch off `dev`.
-- Each published version is built from the commit that documents that release.
+- `dev` holds the documentation for the next release. Edit it on `dev`, alongside the product change it documents;
+  nothing on `dev` reaches readers until it is published.
+- `master` holds the documentation of the current release, and every published version is built from it.
 
-Publish a release's documentation (pushes the `gh-pages` branch, which GitHub Pages serves):
+## Publish a release
 
-    mike deploy --push <version>             # e.g. 6.0
-    mike set-default --push <version>        # when it becomes the version a reader lands on
+1. Merge `dev` into `master` (`git merge --no-ff dev`) and push `master`.
+2. On `master`, run:
 
-`mike list` shows the published versions.
+       tools/publish.sh <version>               # e.g. 6.0
+       tools/publish.sh <version> --default     # when it becomes the version a reader lands on
 
-## Importing from the wiki
+The script refuses to publish unless `master` is checked out, clean and the same as `origin/master`, and the strict
+build passes. It deploys the version with mike, pushes the `gh-pages` branch, waits for GitHub Pages to build it and
+checks that the version's page is served. `mike list` shows the published versions.
 
-Until the GitHub wiki is retired, `tools/import-wiki.py` brings its pages across: it replaces the pages and images
-in `docs/` and the `nav:` section of `mkdocs.yml` with those of one wiki ref.
-
-    python3 tools/import-wiki.py <ElasticMDS.wiki clone> <git-ref>
+[TOOLING.md](TOOLING.md) lists the tools, their versions and where each comes from.

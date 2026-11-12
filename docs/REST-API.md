@@ -22,7 +22,7 @@ Plain HTTP on port `9090`. `mf-api-gateway` is a DNS name that must resolve to t
 
 Calls are **read-mostly**: the great majority are `GET`s that change nothing. The few that mutate the running system are called out under [Controlling the running system](#controlling-the-running-system) below.
 
-**Authentication.** The REST interface is authenticated with **API tokens** - present a `Bearer` token on each call (the examples in this wiki omit the header for brevity). Keep the gateway on a trusted network as well. See [Security: Basics](Security-Basics.md) and [API Token Administration](API-Token-Administration.md).
+**Authentication.** The REST interface is authenticated with **API tokens** - present a `Bearer` token on each call (the examples in this guide omit the header for brevity). Keep the gateway on a trusted network as well. See [Security: Basics](Security-Basics.md) and [API Token Administration](API-Token-Administration.md).
 
 ---
 

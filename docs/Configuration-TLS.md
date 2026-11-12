@@ -87,6 +87,29 @@ com.metafluent.blueprint.rtc.refresh.server.tcpip.webSocketServer.tls=required:p
 
 A network named in `tlsNetworks` must be one the listener binds; a misspelt name stops the node at start and says so.
 
+### WebSocket listeners
+
+The session, pub-sub, SQL and refresh servers each open a WebSocket listener for browser clients. The listener is on by default, on these ports:
+
+| Server | Default port | Port range |
+|---|---|---|
+| Session | 8950 | 1 |
+| Pub-sub | 8650 | 1 |
+| SQL | 8850 | 1 |
+| Refresh | 8750 | 20 |
+
+A browser client starts at the session server's WebSocket port. Open the ports your browser clients need.
+
+A listener accepts a browser connection from the origins you list in `webSocketServer.allowedOrigins`, which takes its value from the `METAFLUENT_WEB_ORIGINS` environment variable. Give it a comma-separated list of origins in the form `scheme://host[:port]`, the address of the page that opens the connection:
+
+```bash
+METAFLUENT_WEB_ORIGINS=https://app.example.com,https://portal.example.com
+```
+
+Set it on each node that runs one of these servers. The value is empty by default, and a browser connection from an origin that is not listed is refused with HTTP 403, as is a WebSocket connection that sends no origin. Applications that connect to the servers' TCP listeners, such as JMS and JDBC applications, are not affected.
+
+To turn a server's WebSocket listener off, set `webSocketListener.enabled=false` on that server's component, for example `com.metafluent.blueprint.rtc.session.server.tcpip.webSocketListener.enabled=false`. `webSocketListener.defaultPort` and `webSocketListener.portRange` change the port.
+
 ### API gateway and SSO
 
 | Component | Setting | Default | What it does |
@@ -103,28 +126,39 @@ com.metafluent.blueprint.core.utilities.restServer.machineTls=required:internal
 com.metafluent.blueprint.network.registry.internalHttp.tls=required:internal
 ```
 
+Every other node makes its internal HTTP calls with the same setting under `com.metafluent.blueprint.network.registry.proxy`; see [Internal connections](#internal-connections). The simplest way to set it on every node at once is the `METAFLUENT_INTERNAL_HTTP_TLS` environment variable.
+
 ### Internal connections
+
+The TLS profiles and the internal HTTP setting are carried by two components with the same settings. `com.metafluent.blueprint.network.registry` runs on the API gateway node and on the consolidated node. `com.metafluent.blueprint.network.registry.proxy` runs on every other node. Set the values with the environment variables below and they apply on every node whichever component it carries. To set them in a properties file instead, use the component name the node carries.
 
 | Component | Setting | Default | What it does |
 |---|---|---|---|
-| `com.metafluent.blueprint.network.registry` | `tlsProfileRegistry.descriptorPath` | `$(METAFLUENT_TLS_PROFILES_DESCRIPTOR:$(METAFLUENT_CONFIG_RESOURCES)/tls/profiles.json)` | Path to the profiles file. A file that is present must load completely, or the node does not start. |
-| `com.metafluent.blueprint.network.registry` | `tlsProfileRegistry.reloadIntervalSeconds` | `$(METAFLUENT_TLS_RELOAD_INTERVAL_SECONDS:60)` | How often, in seconds, profiles check for renewed files. 0 turns checking off. |
-| `com.metafluent.blueprint.network.registry` | `internalHttp.tls` | `$(METAFLUENT_INTERNAL_HTTP_TLS:off)` | How the node makes its internal HTTP calls: `off` or `required:<profile>`. With `required`, each call uses HTTPS, verifies the door's certificate and host name with the profile's trust, and presents the profile's certificate if the door asks. |
+| `com.metafluent.blueprint.network.registry` or `...registry.proxy` | `tlsProfileRegistry.descriptorPath` | `$(METAFLUENT_TLS_PROFILES_DESCRIPTOR:$(METAFLUENT_CONFIG_RESOURCES)/tls/profiles.json)` | Path to the profiles file. A file that is present must load completely, or the node does not start. |
+| `com.metafluent.blueprint.network.registry` or `...registry.proxy` | `tlsProfileRegistry.reloadIntervalSeconds` | `$(METAFLUENT_TLS_RELOAD_INTERVAL_SECONDS:60)` | How often, in seconds, profiles check for renewed files. 0 turns checking off. |
+| `com.metafluent.blueprint.network.registry` or `...registry.proxy` | `internalHttp.tls` | `$(METAFLUENT_INTERNAL_HTTP_TLS:off)` | How the node makes its internal HTTP calls: `off` or `required:<profile>`. With `required`, each call uses HTTPS, verifies the door's certificate and host name with the profile's trust, and presents the profile's certificate if the door asks. |
 | `com.metafluent.blueprint.datafabric` | `tcpipServer.tls` | `off` | TLS mode of the fabric mesh listener (inbound), including `offered`. |
 | `com.metafluent.blueprint.datafabric` | `tcpipServer.tlsNetworks` | empty | Per-network overrides for the mesh listener. |
 | `com.metafluent.blueprint.datafabric` | `server.outboundTls` | `off` | TLS on this node's connections to its mesh peers: `off` or `required:<profile>`. |
 | `com.metafluent.blueprint.datafabric` | `server.tlsPeerName` | empty | The name every fabric node's mesh certificate carries, for example `fabric.internal`. Peers are verified against it. Needed when `server.outboundTls` is `required`. |
 | `com.metafluent.blueprint.rtc.content.common` | `childResultReaderFactory.tls` | `off` | TLS for reading other nodes' results: `off` or `required:<profile>`. Orchestration then places those reads on listeners that serve TLS. |
 | `com.metafluent.blueprint.rtc.query.proxy.authnz` | `entitlementsContextConnection.tls` | `off` | TLS for the session with the entitlements server. |
-| `com.metafluent.blueprint.rtc.content.adapter.mfpubsub` | `pubsubContent.tls` | `off` | TLS for the pub-sub adapter's session with the data tier and its REST calls to it (TLS and HTTPS when required). |
+| `com.metafluent.blueprint.rtc.content.adapter.mfpubsub` | `pubsubContent.tls` | `off` | TLS for the pub-sub adapter's session with the data tier (TLS when required). Its calls to the API gateway follow `internalHttp.tls`. |
 
-The `tlsProfileRegistry` settings can also be set from the environment: `METAFLUENT_TLS_PROFILES_DESCRIPTOR`, `METAFLUENT_TLS_RELOAD_INTERVAL_SECONDS` and `METAFLUENT_INTERNAL_HTTP_TLS`.
+The environment variables are `METAFLUENT_TLS_PROFILES_DESCRIPTOR`, `METAFLUENT_TLS_RELOAD_INTERVAL_SECONDS` and `METAFLUENT_INTERNAL_HTTP_TLS`.
 
-Example - reload every 5 minutes, and keep the profiles file in a custom location:
+Example - reload every 5 minutes, and keep the profiles file in a custom location, on every node:
+
+```bash
+METAFLUENT_TLS_PROFILES_DESCRIPTOR=/etc/metafluent/tls/profiles.json
+METAFLUENT_TLS_RELOAD_INTERVAL_SECONDS=300
+```
+
+The same in a properties file, on a node that carries the proxy component:
 
 ```properties
-com.metafluent.blueprint.network.registry.tlsProfileRegistry.descriptorPath=/etc/metafluent/tls/profiles.json
-com.metafluent.blueprint.network.registry.tlsProfileRegistry.reloadIntervalSeconds=300
+com.metafluent.blueprint.network.registry.proxy.tlsProfileRegistry.descriptorPath=/etc/metafluent/tls/profiles.json
+com.metafluent.blueprint.network.registry.proxy.tlsProfileRegistry.reloadIntervalSeconds=300
 ```
 
 ---
@@ -154,7 +188,7 @@ Setting:
 com.metafluent.blueprint.rtc.refresh.server.tcpip.webSocketServer.tls=required:public
 ```
 
-The certificate names the host the browser connects to, and a certificate from a public CA is trusted by the browser as it stands. Browsers connect to `wss://host:port`; see [Developing with TLS](Develop-TLS.md). To keep serving existing `ws://` pages during a migration, use `offered:public` instead; one port then serves `ws://` and `wss://`.
+The certificate names the host the browser connects to, and a certificate from a public CA is trusted by the browser as it stands. Allow the pages' origins with `METAFLUENT_WEB_ORIGINS` (see [WebSocket listeners](#websocket-listeners)). Browsers connect to `wss://host:port`; see [Developing with TLS](Develop-TLS.md). To keep serving existing `ws://` pages during a migration, use `offered:public` instead; one port then serves `ws://` and `wss://`.
 
 ### An all-TLS deployment
 

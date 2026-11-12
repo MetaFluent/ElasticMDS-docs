@@ -102,7 +102,7 @@ Content is delivered as JMS `MapMessage`s. Each message carries a type, which th
 
 - **Image** - the initial, complete set of field values for a topic, sent when the subscription is established.
 - **Update** - a subsequent change to one or more field values.
-- **Status** - a change in the state of the data stream: `OK`, `STALE` (the source may be disconnected), `CLOSED`, `DENIED` (not entitled), or `INVALID` (the request could not be satisfied).
+- **Status** - a change in the state of the data stream: `OK`, `STALE` (the source may be disconnected), `CLOSED`, `DENIED` (not entitled), or `INVALID` (the request could not be satisfied). `CLOSED`, `DENIED` and `INVALID` end the stream; see [Dynamic Data Conventions](Dynamic-Data-Conventions.md#stream-state).
 - **Stream update** - on a multi-stream subscription (a table, view, or multi-key topic), signals a new stream or a change in the collection's ordering. An application that does not maintain collection order can ignore it.
 
 Interpreting these messages correctly - the field and property conventions, the message-type and state codes, the multi-stream details, and how to read the field values - is covered in detail in [Dynamic Data Conventions](Dynamic-Data-Conventions.md). The `com.metafluent.jms.common.DynamicDataConventions` class defines the property names and type codes used throughout.

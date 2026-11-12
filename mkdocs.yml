@@ -53,8 +53,7 @@ validation:
   absolute_links: warn
   unrecognized_links: warn
   anchors: warn
-# The navigation below is generated from the wiki's _Sidebar.md by tools/import-wiki.py; edit it by hand once the
-# wiki is retired.
+# The navigation below is maintained by hand: every page in docs/ is listed here, in reading order.
 nav:
   - "Home": index.md
   - "Getting Started":
@@ -80,6 +79,8 @@ nav:
       - "Advanced": Configuration-Advanced.md
       - "Reference": Configuration-Reference.md
       - "TLS": Configuration-TLS.md
+      - "Page Feeds": Configuration-Page-Feeds.md
+      - "Socrata Open Data": Configuration-Socrata.md
   - "Configuration Cookbook":
       - "Configure DACS": Cookbook-Configure-DACS.md
       - "Slow Consumer Protection": Cookbook-Configure-Slow-Consumer-Protection.md
@@ -101,12 +102,21 @@ nav:
   - "Diagnostic Cookbook":
       - "Tracing": Diagnostic-Cookbook.md
   - "Developing Applications":
-      - "JMS": Develop-JMS.md
-      - "Worked Example: SimpleSubscriber": Example-SimpleSubscriber.md
-      - "JDBC": Develop-JDBC.md
-      - "TLS": Develop-TLS.md
-      - "Dynamic Data Conventions": Dynamic-Data-Conventions.md
-      - "Entitlements Context": Entitlements-Context.md
+      - "JMS":
+          - "Overview": Develop-JMS.md
+          - "Worked Example: SimpleSubscriber": Example-SimpleSubscriber.md
+      - "JDBC":
+          - "Overview": Develop-JDBC.md
+          - "Worked Example: JDBCTestApp": Example-JDBCTestApp.md
+      - "JS":
+          - "Overview": Develop-JS.md
+          - "Worked Example: smart-refresh-demo": Example-smart-refresh-demo.md
+      - "Content Model":
+          - "Market Data Context": Dynamic-Data-Conventions.md
+          - "Entitlements Context": Entitlements-Context.md
+      - "Geospatial Functions": Develop-Geospatial.md
+      - "Security":
+          - "TLS": Develop-TLS.md
   - "Reference":
       - "REST API": REST-API.md
       - "Log Message Reference": Log-Message-Reference.md
