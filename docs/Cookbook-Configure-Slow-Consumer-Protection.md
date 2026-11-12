@@ -13,11 +13,13 @@ For the concepts behind these two mechanisms, see [Slow-consumer protection: del
 
 Delivery scaling has default settings, so nothing needs to be set for it to work. Change these settings to adjust how aggressively a deployment adds resources for a slow consumer, or how long it waits before taking them back.
 
-These settings are in the orchestration service's adaptive result policy, read at startup from:
+These settings are in the orchestration service's adaptive push result policy, read at startup from:
 
 ```
-deployment-config/resources/orchestration/policies/result/adaptive-result-policy.json
+deployment-config/resources/orchestration/policies/result/push/adaptive-result-policy.json
 ```
+
+Result policies are held per distribution protocol; see [Result policies by protocol](#result-policies-by-protocol) below.
 
 | Setting | Default | What it controls |
 |-------|---------|-------------------|
@@ -48,6 +50,109 @@ An example policy with every setting specified:
   }
 }
 ```
+
+## Result policies by protocol
+
+A result policy governs how a query result is placed across shards and targets. Policies are held per distribution protocol, so push results and refresh results each have their own policies, their own default and their own assignments. The delivery scaling settings above belong to push policies.
+
+### Directory layout
+
+Result policies live in the `result/` folder under `deployment-config/resources/orchestration/policies/`. Inside it, one directory per protocol holds that protocol's policy files; the assignments file for both protocols sits beside the `result/` folder:
+
+```
+result/push/adaptive-result-policy.json
+result/push/adaptive-result-policy-no-split.json
+result/refresh/passive-result-policy.json
+result-policy-assignments.json
+```
+
+The directory is the policy's protocol. A policy name is unique within its protocol, so the same name can appear once in each directory. Both `push/` and `refresh/` are present in a deployment; a policy file placed directly under `result/`, or a missing protocol directory, is refused when orchestration starts, with a message naming the file or directory.
+
+### What each protocol sets
+
+A push policy can set every field. It carries the delivery scaling settings above, because a push shard can fall behind and is scaled to keep up.
+
+A refresh shard answers its client's polls, so a refresh policy sets the placement fields that govern it:
+
+| Field | What it controls |
+|-------|------------------|
+| `Name`, `Description` | The policy's identity. |
+| `MaxBindingsPerShard`, `MinBindingsPerShard` | How many rows a shard carries. With `MaxBindingsPerShard` unbounded, a refresh result is served by one shard per target it uses. |
+| `MaxShardsPerTarget` | The ceiling on shards for any one target. |
+| `OrchestrationRetryMilliseconds` | How soon a placement is retried. |
+| `ShardRebalanceTimeSeconds`, `RebalanceTolerancePercent`, `ScaleDownDrainTickMillis` | Rebalance pacing and tolerance. `0` for `ShardRebalanceTimeSeconds` keeps the placement steady. |
+| `FillQuietMilliseconds`, `InitBatchWindowMilliseconds` | How a result's initial content is placed in batches. |
+| `TargetPlacementObjectives`, `ShardPlacementObjectives`, `ShardSpreadBias` | Where shards are placed. |
+
+These common fields can also be set in a push policy. The fields below belong to push policies only:
+
+`InitRowsPerShard`, `MergeDownSettleMilliseconds`, `SplitLoadThresholdSlowPercent`, `SplitLoadThresholdFastPercent`, `ConcernSplitMaxShardsPerTarget`, `DuressCooldownSeconds`, `DuressDrainSpeedupFactor`, `ConsolidationLowWaterPercent`, `DuressShardPlacementObjectives`
+
+A refresh policy file that sets one of them is refused when orchestration starts (and when the file changes while it runs), with a message naming the file and the field. The field's value does not matter: a field that is present is refused.
+
+The shipped refresh policy:
+
+```json
+{
+	"ResultPolicyType": "AdaptiveResultPolicy",
+	"Policy": {
+		"Name": "passive-result-policy",
+		"Description": "A non-scaling passive policy: a refresh result's rows are served by as few shards as the targets allow (MaxBindingsPerShard is unbounded), with no rebalancing on a timer",
+		"MaxBindingsPerShard": 2147483647,
+		"MinBindingsPerShard": 1,
+		"MaxShardsPerTarget": 5,
+		"OrchestrationRetryMilliseconds": 5000,
+		"ShardRebalanceTimeSeconds": 0,
+		"RebalanceTolerancePercent": 10,
+		"ScaleDownDrainTickMillis": 250
+	}
+}
+```
+
+Refresh placement serves a result from one shard per target, up to the `MaxBindingsPerShard` cap, and rebalances by the common fields. A refresh result is placed by these fields alone and is not part of slow-consumer handling (splitting, cooldown and consolidation), which applies to push results. A request to force a split on a refresh result is refused with a message naming the result and the protocol.
+
+### Default policy per protocol
+
+Each protocol has a default: the policy a result gets when no assignment matches its requester, and the fallback when an assignment names a policy that is not loaded. Set them in the orchestration properties:
+
+```
+policyManager.defaultResultPolicyName.push=adaptive-result-policy
+policyManager.defaultResultPolicyName.refresh=passive-result-policy
+```
+
+These are the defaults. Each protocol also has a built-in policy of the same name, used when its directory does not supply one: `adaptive-result-policy` for push (with the values of the shipped file) and `passive-result-policy` for refresh.
+
+The single property `policyManager.defaultResultPolicyName` is replaced by these two. Leave it unset: a deployment that still sets it does not start, and the message names `policyManager.defaultResultPolicyName.push` and `policyManager.defaultResultPolicyName.refresh`.
+
+### Assignments
+
+`result-policy-assignments.json` holds the assignments for both protocols. Every row has a `Protocol`, `push` or `refresh`. The row matches only results distributed by that protocol, and its `PolicyName` is looked up among that protocol's policies. A row without a `Protocol`, or with another value, fails the load with a message naming the row and the file.
+
+The shipped file assigns each protocol's default to every result of that protocol through a catch-all row at the lowest priority:
+
+```json
+[
+	{ "Protocol": "push", "Priority": 2147483647, "PolicyName": "adaptive-result-policy" },
+	{ "Protocol": "refresh", "Priority": 2147483647, "PolicyName": "passive-result-policy" }
+]
+```
+
+Within a protocol, rows are matched against the requester behind the statement - `ApplicationId`, `UserId` and `PositionPrefix` (a client-IP prefix), any of which may be omitted to match all - and the row with the lowest `Priority` value wins. To give one application its own push policy, add a row above the catch-all:
+
+```json
+{ "Protocol": "push", "ApplicationId": "algo-execution", "Priority": 10, "PolicyName": "adaptive-result-policy-no-split" }
+```
+
+### REST
+
+Policies are reached over REST in two collections, one per protocol, each keyed by policy name:
+
+| Resource | Purpose |
+|----------|---------|
+| `pushResultPolicies` | List, get, post and delete push result policies. |
+| `refreshResultPolicies` | List, get, post and delete refresh result policies. A posted policy that sets a push-only field is refused, naming the field. |
+| `resultPolicyTemplate` | A template for a policy type; takes `policyType` and a required `protocol` (`push` or `refresh`). The refresh template shows only the fields a refresh policy may set. |
+| `resultPolicyAssignments` | List, get, post and delete assignments; a posted row carries its `Protocol`. |
 
 ## Conflation rules
 
@@ -174,6 +279,8 @@ Copy this file, or individual entries from `rules.json.txt`, into `deployment-co
 ---
 
 ## Verify
+
+**Result policies.** List the policies loaded for each protocol through the `pushResultPolicies` and `refreshResultPolicies` resources, and the assignments through `resultPolicyAssignments`.
 
 **Delivery scaling.** Ask orchestration how many shards are currently serving each result - more than one means Elastic MDS has scaled that consumer's delivery:
 
