@@ -21,8 +21,12 @@ This SDK is pre-1.0 and does not yet follow the milestone/stable-branch tagging 
 The SDK contains:
 
 - `lib/metafluent-smart-refresh.tgz` - the client library (`@metafluent/smart-refresh`), a single, self-contained npm package with no dependencies of its own to install.
-- `bin/smart-refresh-demo.js` - the example application, prebuilt and ready to run with plain `node` - no `npm install` needed.
+- `bin/smart-refresh-demo.js` - a command-line example application, prebuilt and ready to run with plain `node` - no `npm install` needed.
 - `examples/src/smart-refresh-demo.ts` - the same example's readable source.
+- `web/` - a browser example application, prebuilt and ready to run - no `npm install` needed.
+- `web/src/` - the same example's readable source.
+
+The command-line example is a useful install sanity-check, but it is not the pattern most developers reaching for this SDK actually want: it is plain Node, nothing like a browser app. If you are building a client-side web app - this SDK's real target use case - start from `web/src/` and [Worked Example: Smart Refresh Web Demo](Example-Smart-Refresh-Web-Demo.md) instead of the snippet below.
 
 To build against the library:
 
@@ -94,9 +98,29 @@ const connection = await connect({
 
 ---
 
+## Running the browser example
+
+The SDK's `web/` is exactly this pattern, built out into a small live-updating table with a refresh-rate control:
+
+```
+cd web
+npm run serve
+```
+
+No `npm install` needed - `npm run serve` runs a small, dependency-free static file server (`web/serve.js`, Node's own `http` module only) directly from `package.json`'s `scripts`. Open the printed URL with a query in it:
+
+```
+http://localhost:4173/?sql=SELECT RIC, DSPLY_NAME, BID, ASK, TRDPRC_1 FROM Quotes.RDF WHERE RIC IN ('SAB.L','BG.L')
+```
+
+Your session server needs to allow the browser's origin (`http://localhost:4173` by default) - see your deployment's `METAFLUENT_WEB_ORIGINS` setting. For how `web/src/main.ts` actually does this - connecting over WebSocket, rendering a live table, and the one browser-specific detail (a small `Buffer` shim, since browsers don't have Node's `Buffer`) - see [Worked Example: Smart Refresh Web Demo](Example-Smart-Refresh-Web-Demo.md).
+
+---
+
 ## Where to go next
 
 - [JDBC Application Development](Develop-JDBC.md) - query the same content with Java and JDBC.
+- [Worked Example: Smart Refresh Web Demo](Example-Smart-Refresh-Web-Demo.md) - the browser example, section by section - start here if you're building a web app.
 - [Worked Example: smart-refresh-demo](Example-smart-refresh-demo.md) - the command-line query tool, section by section.
 - [Dynamic Data Conventions](Dynamic-Data-Conventions.md) - the field and content model behind the tables you query.
 - [Glossary](Glossary.md) - definitions of the terms used here.
