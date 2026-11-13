@@ -4,7 +4,7 @@
 # Usage: tools/publish.sh <version> [--default]
 #
 #   <version>   the docs version to publish, e.g. 6.0 (a new version, or a republish of an existing one)
-#   --default   also make it the version a reader lands on
+#   --default   this is now the current release: point the 'latest' alias and the landing page at it
 #
 # Publishes the tip of master, which holds the documentation of the current release. It stops, changing nothing,
 # unless master is checked out, clean and the same as origin/master, the local gh-pages is the same as (or behind)
@@ -51,9 +51,17 @@ echo "publish: strict build of master $(git rev-parse --short HEAD)"
 zensical build --strict
 
 echo "publish: deploying version $version"
-mike deploy --push "$version"
 if [[ $default == yes ]]; then
-	mike set-default --push "$version"
+	# 'latest' follows the current release so that metafluent.com, and a reader's bookmark, can link into the
+	# documentation without naming a version and still land on the current one. --update-aliases moves the alias
+	# off whichever version holds it now; a republish of an older version, which runs without --default, leaves
+	# it where it is. The alias is a copy rather than mike's default symlink because GitHub Pages serves the git
+	# tree and does not resolve a symlink as a directory. The landing page points at the alias, so it follows
+	# too and never needs setting again.
+	mike deploy --push --update-aliases --alias-type copy "$version" latest
+	mike set-default --push latest
+else
+	mike deploy --push "$version"
 fi
 
 published=$(git rev-parse gh-pages)
@@ -68,7 +76,11 @@ for attempt in $(seq 60); do
 	sleep 5
 done
 
-code=$(curl -s -o /dev/null -w '%{http_code}' "$pages_url/$version/")
-[[ $code == 200 ]] || fail "$pages_url/$version/ answered $code"
-echo "publish: version $version is live at $pages_url/$version/"
+served=("$version")
+[[ $default == yes ]] && served+=(latest)
+for path in "${served[@]}"; do
+	code=$(curl -s -o /dev/null -w '%{http_code}' "$pages_url/$path/")
+	[[ $code == 200 ]] || fail "$pages_url/$path/ answered $code"
+	echo "publish: $pages_url/$path/ is live"
+done
 mike list

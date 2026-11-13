@@ -26,11 +26,16 @@ release (a version drop-down in the header).
 1. Merge `dev` into `master` (`git merge --no-ff dev`) and push `master`.
 2. On `master`, run:
 
-       tools/publish.sh <version>               # e.g. 6.0
-       tools/publish.sh <version> --default     # when it becomes the version a reader lands on
+       tools/publish.sh <version>               # e.g. 6.0, or a republish of a version already out
+       tools/publish.sh <version> --default     # when it becomes the current release
 
 The script refuses to publish unless `master` is checked out, clean and the same as `origin/master`, and the strict
 build passes. It deploys the version with mike, pushes the `gh-pages` branch, waits for GitHub Pages to build it and
-checks that the version's page is served. `mike list` shows the published versions.
+checks that the pages it published are served. `mike list` shows the published versions and their aliases.
+
+`--default` also moves the **`latest`** alias to the version being published, and points the landing page at that
+alias. So `.../latest/<Page>` always serves the current release, which is what metafluent.com links to: those links
+need no attention at a release, and a reader's bookmark follows too. Publish without `--default` to correct a
+version that is already out, which leaves `latest` where it is.
 
 [TOOLING.md](TOOLING.md) lists the tools, their versions and where each comes from.
