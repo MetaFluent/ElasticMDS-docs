@@ -191,7 +191,7 @@ The row key is available as the column `_KEY` (often aliased, e.g. `SELECT _KEY 
 
 ## Browsing the tables
 
-Tools that browse a database through `DatabaseMetaData` see the tables you can query. `getCatalogs`, `getSchemas`, `getTableTypes` and `getTables` return every table, narrowed by the names and patterns you pass, as the JDBC documentation describes.
+Tools that browse a database through `DatabaseMetaData` see the tables you can query. `getCatalogs`, `getSchemas`, `getTableTypes` and `getTables` return every table, narrowed by the names and patterns you pass, as the JDBC documentation describes. These methods, and `getColumns`, answer at once with a complete snapshot of the catalogue as published when you ask: every table, view and function library the cluster has published, and the columns of the tables that publish their column lists. A table that appears later is in your next call. No statement is run for these calls, so the result sets are plain snapshots, not live result sets.
 
 `getTables` reports each table's `TABLE_TYPE`: `TABLE` for a table, `VIEW` for a view, and `FUNCTION_TABLE` for a function library. Views are listed as soon as they exist: the view a `CREATE VIEW` statement defines, and the chain view of a market-data table such as `Chains.RDF`. `getTableTypes` returns the types of the tables listed.
 
