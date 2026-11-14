@@ -193,6 +193,8 @@ The row key is available as the column `_KEY` (often aliased, e.g. `SELECT _KEY 
 
 Tools that browse a database through `DatabaseMetaData` see the tables you can query. `getCatalogs`, `getSchemas`, `getTableTypes` and `getTables` return every table, narrowed by the names and patterns you pass, as the JDBC documentation describes.
 
+`getTables` reports each table's `TABLE_TYPE`: `TABLE` for a table, `VIEW` for a view, and `FUNCTION_TABLE` for a function library. Views are listed as soon as they exist: the view a `CREATE VIEW` statement defines, and the chain view of a market-data table such as `Chains.RDF`. `getTableTypes` returns the types of the tables listed.
+
 `getColumns` returns the columns of tables with a fixed set of columns, such as tables read from a relational database or from files. A market-data table such as `Quotes.RDF` is listed by `getTables`, and `getColumns` returns no columns for it: its fields are those of the [content model](Dynamic-Data-Conventions.md).
 
 ```java
