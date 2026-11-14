@@ -111,7 +111,7 @@ Notice the `Statement` is created `TYPE_SCROLL_SENSITIVE`. That is what makes th
 
 ## Data state: rows and statements
 
-Live data can be degraded for a while: a source disconnects, or part of the cluster is recovering. The driver tells you in two ways, one for each row and one for the statement as a whole.
+Live data can be degraded for a while: a source disconnects, or part of the cluster is recovering. The driver tells you in two ways, one for each row and one for the statement as a whole. Row state says what is known about each row's data; the statement's state says whether the shape of the result itself can be trusted.
 
 ### Each row's state
 
@@ -153,7 +153,7 @@ Row state is the signal for everyday interruptions. A query that does not select
 
 Elastic MDS also reports on the statement as a whole. You do not need to select anything to see it:
 
-- **Degraded.** `ResultSet.getWarnings()` returns a `SQLWarning`, "The statement's result is degraded: ...", with the reason. The rows stay readable. The warning goes away by itself when the statement is OK again, and `clearWarnings()` hides it until a different warning arises.
+- **Degraded.** `ResultSet.getWarnings()` returns a `SQLWarning`, "The statement's result is degraded: ...", with the reason. A statement is degraded when the structure of its result is in doubt, not when its rows are: a query on a chain, such as `Chains.RDF`, is degraded while any of the chain's header records is stale, whatever made it stale (the connection to the source is down, the source reports the service suspect, or the header's own status), because the membership the result is built from may be out of date. The warning names the first stale header and, when several are stale, how many. The rows stay readable, each with its own state. The warning goes away by itself when every header is OK again, and `clearWarnings()` hides it until a different warning arises. Rows going STALE never degrade a query that does not depend on them for its shape: a query on `Quotes.RDF` keeps its statement OK through a feed outage while its rows report STALE.
 - **Failed.** The next use of the result set throws a `SQLException`, "The statement failed after it was acknowledged: ...", with the reason. A failed statement does not recover: close the result set and run the query again if you still need the data.
 
 A good pattern is to check `getWarnings()` each time you refresh the result set, and to treat a `SQLException` from the result set as the end of that query.
