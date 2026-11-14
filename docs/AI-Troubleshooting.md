@@ -28,6 +28,12 @@ An AI support assistant drives the same REST and log surface you do, and knows h
 
 ---
 
+## Scout in your container list
+
+The assistant connects to your system through Scout, the MetaFluent MCP diagnosis server. Scout registers its endpoints with the API gateway, so while it runs it appears as a container named `mf-scout` in the system's application-state - in the gateway's container list, in Scout's own `get_system_state` view, and in any operator view of your containers. A system of five containers shows six while Scout is running, and `mf-scout` leaves the list when you stop Scout.
+
+---
+
 ## Where it fits
 
 The assistant **complements** the manual tools - it does not replace them. Everything it does, you can still do yourself with the pages above, and you always see the evidence it worked from. It is aimed especially at the [capture-and-analyze step](Operations-Troubleshooting.md#standard-diagnostic-procedure): gathering the state, dump, and logs the moment a problem appears, and making sense of them fast.

@@ -42,6 +42,8 @@ A redundant deployment adds a `STANDBY` for each protected service, sitting at `
 
 So healthy is: every `ACTIVE`/`n/a` component `FULLY_OPERATIONAL`, and every `STANDBY` at `RESOURCE_COMPLETE`. Anything else is your signal to drill in.
 
+If you run [Scout](AI-Troubleshooting.md#scout-in-your-container-list), the AI-assisted troubleshooting server, it appears in this list as `mf-scout` for as long as it runs.
+
 ---
 
 ## Which part is broken?
