@@ -26,7 +26,7 @@ The SDK contains:
 - `web/` - a browser example application, prebuilt and ready to run - no `npm install` needed.
 - `web/src/` - the same example's readable source.
 
-The command-line example is a useful install sanity-check, but it is not the pattern most developers reaching for this SDK actually want: it is plain Node, nothing like a browser app. If you are building a client-side web app - this SDK's real target use case - start from `web/src/` and [Worked Example: Smart Refresh Web Demo](Example-Smart-Refresh-Web-Demo.md) instead of the snippet below.
+For a browser-based client-side app, start from `web/src/` and [Worked Example: Smart Refresh Web Demo](Example-Smart-Refresh-Web-Demo.md) instead of the command-line snippet below.
 
 To build against the library:
 
@@ -113,7 +113,7 @@ No `npm install` needed - `npm run serve` runs a small, dependency-free static f
 http://localhost:4173/?sql=SELECT RIC, DSPLY_NAME, BID, ASK, TRDPRC_1 FROM Quotes.RDF WHERE RIC IN ('SAB.L','BG.L')
 ```
 
-Your session server needs to allow the browser's origin (`http://localhost:4173` by default) - see your deployment's `METAFLUENT_WEB_ORIGINS` setting. For how `web/src/main.ts` actually does this - connecting over WebSocket, rendering a live table, and the one browser-specific detail (a small `Buffer` shim, since browsers don't have Node's `Buffer`) - see [Worked Example: Smart Refresh Web Demo](Example-Smart-Refresh-Web-Demo.md).
+Your session server needs to allow the browser's origin (`http://localhost:4173` by default) - see your deployment's `METAFLUENT_WEB_ORIGINS` setting. For a section-by-section walkthrough of `web/src/main.ts` - connecting over WebSocket, rendering the live table, and the refresh-rate control - see [Worked Example: Smart Refresh Web Demo](Example-Smart-Refresh-Web-Demo.md).
 
 ---
 
