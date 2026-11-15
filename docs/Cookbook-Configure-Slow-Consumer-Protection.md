@@ -158,7 +158,7 @@ Policies are reached over REST in two collections, one per protocol, each keyed 
 
 Conflation of updates is a last resort to avoid connection overflow and results in degradation of tick-by-tick updates to conflated updates.
 
-Conflation rules control per-session conflation on the push distribution server: which updates are collapsed, and the thresholds at which automatic conflation engages, for the consumers a rule is assigned to. A consumer with no matching rule is not conflated - it still gets delivery scaling, above.
+Conflation rules control per-session conflation on the push distribution server: which updates are collapsed, and the thresholds at which automatic conflation engages, for the consumers a rule is assigned to. A consumer with no matching rule is not conflated - it still gets delivery scaling, above. A subscription whose selector carries a `WHERE` clause is governed by that clause instead of by rules: the application has chosen to [filter or conflate](Develop-JMS.md#selectors) the stream itself.
 
 Rules are read from a single JSON file. This section documents that file and its fields.
 

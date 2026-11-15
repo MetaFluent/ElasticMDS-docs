@@ -55,8 +55,9 @@ fewer fields, and the CPU used on the client.
   adopt them without moving to the new MarketData context.
 
 A selector does more than choose fields - it can rename a field with `AS`, compute a derived field
-from an expression, and constrain the update stream with a `WHERE` clause so an update is delivered
-only when a condition holds. The full grammar and examples are in
+from an expression, filter the update stream with a `WHERE` clause so an update is delivered only
+when it makes the condition true, or conflate the stream with a `WHERE` clause on a timer. The full
+grammar and examples are in
 [JMS Application Development](Develop-JMS.md#selectors).
 
 ---

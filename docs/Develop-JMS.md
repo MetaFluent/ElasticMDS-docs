@@ -90,7 +90,10 @@ A selector can do more than choose fields:
 
 - **Rename a field** with `AS` - `-selector "BID,ASK,TRDPRC_1 AS LAST"`.
 - **Compute a derived field** with an expression - `-selector "BID,ASK,ASK-BID AS SPREAD"`.
-- **Constrain the update stream** with a `WHERE` clause, so an update is delivered only when the condition holds - `-selector "BID,ASK,TRDPRC_1 WHERE TRDVOL_1 > 10000"`.
+- **Filter the update stream** with a `WHERE` clause. An update is delivered when it changes at least one field the condition names and the condition is true after it; every other update is dropped - `-selector "BID,ASK,TRDPRC_1 WHERE TRDVOL_1 > 10000"` delivers the trade-volume changes that take the volume above 10,000, and nothing else. The condition may read fields the update did not change, and the delivered message carries the fields the update changed. Over a joined selection each update comes from one of the joined tables and is judged the same way, with the other table's fields at their current values.
+- **Conflate the update stream** with a `WHERE` clause that contains `MFUtil.TIMER`. Updates are held, and the fields changed since the last delivery go out as one message when the condition turns true - `-selector "BID,ASK,TRDPRC_1 WHERE MFUtil.UPDATED(MFUtil.TIMER(250, 'MILLISECONDS'))"` delivers at most one message per 250 ms; `MFUtil.UPDATED(MFUtil.TIMER(250, 'MILLISECONDS'), TRDPRC_1)` also delivers on every trade.
+
+A `WHERE` clause is the application's own choice for its subscription, so it takes the place of any conflation an operator's [conflation rule](Cookbook-Configure-Slow-Consumer-Protection.md#conflation-rules) would otherwise apply to it.
 
 Selectors work the same way under either context, so a v5 application on the `com.metafluent.jms_context.mds` context can use them without moving to the MarketData context.
 
