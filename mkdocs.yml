@@ -115,7 +115,6 @@ nav:
       - "Content Model":
           - "Market Data Context": Dynamic-Data-Conventions.md
           - "Entitlements Context": Entitlements-Context.md
-      - "Geospatial Functions": Develop-Geospatial.md
       - "Security":
           - "TLS": Develop-TLS.md
   - "Reference":

@@ -230,7 +230,6 @@ The view is live like any other content: its rows update as the underlying marke
 - [JMS Application Development](Develop-JMS.md) - subscribe to the same content and stream it.
 - [Worked Example: JDBCTestApp](Example-JDBCTestApp.md) - the full command-line query tool, section by section.
 - [Developing with TLS](Develop-TLS.md) - connect over TLS.
-- [Geospatial Functions (MFGeo)](Develop-Geospatial.md) - distance, region and nearest-point functions in SQL, including as join keys.
 - [Dynamic Data Conventions](Dynamic-Data-Conventions.md) - the field and content model behind the tables you query.
 - [Architecture: Basics](Architecture-Basics.md) - the model behind the API.
 - [Glossary](Glossary.md) - definitions of the terms used here.

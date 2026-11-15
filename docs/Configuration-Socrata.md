@@ -1,6 +1,6 @@
 # Configuration: Socrata Open Data Tables
 
-The Socrata adapter serves datasets from a Socrata open-data site (for example data.cityofchicago.org) as tables. Each table is one JSON descriptor file. A dataset can also be published as a point set or a region set, the reference sets the [MFGeo](Develop-Geospatial.md) functions read.
+The Socrata adapter serves datasets from a Socrata open-data site (for example data.cityofchicago.org) as tables. Each table is one JSON descriptor file.
 
 **Audience:** Operator.
 
@@ -22,15 +22,13 @@ A table reads no rows when it starts, only its columns and its row count. Rows a
 
 | Field | Meaning |
 |---|---|
-| `Schema`, `Table` | The table's name. Required; a point or region set gives `Table` only. |
+| `Schema`, `Table` | The table's name. Required. |
 | `URL` | The dataset's resource URL, `.../resource/<id>.json`. Required. |
 | `Key` | The column that identifies a row. Defaults to the Socrata row identifier, `:id`. Always a STRING field: a row's key is the column's value as Socrata returns it, for a number column the number without trailing or leading zeros (`8`, not `8.0` or `08`). |
 | `Columns` | Optional list of columns, each with `Name`, `FieldType` (STRING, DECIMAL, BOOLEAN, INTEGER, LONG or DOUBLE) and an optional `SizeHint`. Without it, every mappable column is exposed. |
 | `DateTimeField` | The column that `TimeRangeStart` and `TimeRangeEnd` apply to. |
 | `TimeRangeStart`, `TimeRangeEnd` | The table holds only the rows in this time range. |
 | `TimeZone` | The time zone of the dataset's times. Required with a period back from now. |
-| `PointSet` | Publishes the dataset as a point set. |
-| `RegionSet` | Publishes the dataset as a region set. |
 
 ### Columns
 
@@ -44,26 +42,6 @@ Without `Columns`, text and timestamps are exposed as STRING, numbers as DECIMAL
 - `-PT6H` and `-PT30M` count back from the start of the current hour or minute.
 
 The window moves once a day (or hour, or minute), and the table reads its rows again when it does, so a row that has left the window leaves the table. A period back from now needs `TimeZone`, for example `America/Chicago`: it is the zone of the dataset's times, which decides when the day starts. A value that mixes a period with a duration (`-P1DT6H`) is refused. `TimeRangeEnd` is always a time.
-
-### Point sets
-
-`PointSet` takes the two columns that hold the coordinates, as number or text columns:
-
-```json
-"PointSet" : { "Latitude" : "<column>", "Longitude" : "<column>" }
-```
-
-The dataset becomes the point set `Points.<Table>`, with `PointNeighbourhoods.<Table>`.
-
-### Region sets
-
-`RegionSet` takes the multipolygon column:
-
-```json
-"RegionSet" : { "Geometry" : "<column>" }
-```
-
-Two optional members tune the set: `BandWidth`, in degrees (without it the adapter chooses one from the set's own edges), and `NeighbourTolerance`, in metres (default 100). The dataset becomes `Regions.<Table>` with its companion tables, including `RegionNeighbours.<Table>`. The tables are described in [Geospatial Functions](Develop-Geospatial.md#reference-sets).
 
 ---
 
@@ -92,7 +70,7 @@ Crashes since the start of 2023, with selected columns and each crash's location
 
 ### A relative time window
 
-Potholes patched in the last 14 days, as a point set:
+Potholes patched in the last 14 days:
 
 ```json
 {
@@ -100,21 +78,7 @@ Potholes patched in the last 14 days, as a point set:
   "URL" : "https://data.cityofchicago.org/resource/wqdh-9gek.json",
   "DateTimeField" : "completion_date",
   "TimeRangeStart" : "-P14D",
-  "TimeZone" : "America/Chicago",
-  "PointSet" : { "Latitude" : "latitude", "Longitude" : "longitude" }
-}
-```
-
-### A region set
-
-The community areas, keyed by area number:
-
-```json
-{
-  "Table" : "CommunityAreas",
-  "URL" : "https://data.cityofchicago.org/resource/igwz-8jzy.json",
-  "Key" : "area_numbe",
-  "RegionSet" : { "Geometry" : "the_geom" }
+  "TimeZone" : "America/Chicago"
 }
 ```
 
@@ -128,6 +92,5 @@ A descriptor that does not fit its dataset stops that table from starting, and t
 
 ## Where to go next
 
-- [Geospatial Functions (MFGeo)](Develop-Geospatial.md) - use point and region sets in SQL.
 - [Log Message Reference](Log-Message-Reference.md) - the Socrata alerts.
 - [Configuration: Basics](Configuration-Basics.md) - where the adapter's settings live.
