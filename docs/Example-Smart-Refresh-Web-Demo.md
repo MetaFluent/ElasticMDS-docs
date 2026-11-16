@@ -66,8 +66,8 @@ app needs to make:
 let connection;
 try {
   connection = await connect({
-    host: import.meta.env.VITE_SESSION_HOST,
-    port: Number(import.meta.env.VITE_SESSION_PORT),
+    host: "localhost",
+    port: 8900,
     userName: "guest",
     applicationName: "smart-refresh-demo",
     transportFactory: new BrowserWebSocketTransportFactory(),
