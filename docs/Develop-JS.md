@@ -10,7 +10,7 @@ One difference from a typical database client is worth stating up front: the res
 
 ## The SDK
 
-The client and an example application ship in **js-refresh-sdk**:
+The client and two example applications ship in **js-refresh-sdk**:
 
 ```
 git clone --depth 1 -b dev git@github.com:MetaFluent/js-refresh-sdk.git
@@ -21,10 +21,10 @@ This SDK is pre-1.0 and does not yet follow the milestone/stable-branch tagging 
 The SDK contains:
 
 - `lib/metafluent-smart-refresh.tgz` - the client library (`@metafluent/smart-refresh`), a single, self-contained npm package with no dependencies of its own to install.
-- `bin/smart-refresh-demo.js` - a command-line example application, prebuilt and ready to run with plain `node` - no `npm install` needed.
-- `examples/src/smart-refresh-demo.ts` - the same example's readable source.
-- `web/` - a browser example application, prebuilt and ready to run - no `npm install` needed.
-- `web/src/` - the same example's readable source.
+- `bin/smart-refresh-demo.js` / `examples/src/smart-refresh-demo.ts` - a command-line example application, prebuilt and its readable source.
+- `web/` / `web/src/` - a browser example application, prebuilt and its readable source.
+
+Both examples are ready to run as shipped - no `npm install` needed.
 
 For a browser-based client-side app, start from `web/src/` and [Worked Example: Smart Refresh Web Demo](Example-Smart-Refresh-Web-Demo.md) instead of the command-line snippet below.
 
