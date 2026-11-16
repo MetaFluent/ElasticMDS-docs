@@ -47,41 +47,21 @@ node bin/smart-refresh-demo.js --host mf-session --port 8900 \
 
 ## A first query
 
-`connect()` logs in; `.query()` runs a statement and resolves once the server has acked it. The result carries the current snapshot in `.rows`, and is itself an async iterable - each iteration is a live update:
+`connect()` logs in; `.query()` runs a statement and resolves once the server has acked it. The result carries the current snapshot in `.rows`, and is itself an async iterable - each iteration is a live update, consumed with `for await`.
 
-```javascript
-const { connect } = require("@metafluent/smart-refresh");
-
-const connection = await connect({ host: "mf-session", port: 8900, userName: "guest" });
-const result = await connection.query(
-  "SELECT RIC, DSPLY_NAME, BID, ASK, TRDPRC_1 FROM Quotes.RDF WHERE RIC IN ('SAB.L','BG.L')"
-);
-
-console.log(result.columns.map((c) => c.name));
-console.table(result.rows);
-
-for await (const update of result) {
-  console.log(`${update.changed.length} cell(s) changed`);
-  console.table(update.rows);
-}
-
-result.close();
-connection.close();
-```
-
-For the full command-line tool this snippet is drawn from, see [Worked Example: smart-refresh-demo](Example-smart-refresh-demo.md).
+See this pattern in action in [Worked Example: smart-refresh-demo](Example-smart-refresh-demo.md) (command line) or [Worked Example: Smart Refresh Web Demo](Example-Smart-Refresh-Web-Demo.md) (browser).
 
 ---
 
 ## Live results
 
-There is no `absolute(0)`-style refresh call and no cursor to step through: the `for await` loop itself is the live mechanism. Each time through the loop, `update.rows` is the full current snapshot in sort order - always ready to render as-is - and `update.changed` names just the `{ row, column }` positions that changed that tick, enough to flash the right cells without redrawing everything. Call `result.close()` when you no longer need the data, and `connection.close()` when you're done with the connection entirely.
+There is no `absolute(0)`-style refresh call and no cursor to step through: the `for await` loop itself is the live mechanism. Each time through the loop, `update.rows` is the full current snapshot in sort order - always ready to render as-is - and `update.changed` names just the `{ row, column }` positions that changed that tick, enough to update just what changed without redrawing everything. Call `result.close()` when you no longer need the data, and `connection.close()` when you're done with the connection entirely.
 
 ---
 
 ## Scope and transports
 
-This client covers the same single-table, no-join query scope the rest of the JS port does today - the SQL subset is the one described in [The SQL you can use](Develop-JDBC.md#the-sql-you-can-use), minus joins.
+This client's SQL support covers single-table, no-join queries - the same subset described in [The SQL you can use](Develop-JDBC.md#the-sql-you-can-use), minus joins.
 
 `connect()` defaults to a plain Node TCP socket (`NodeSocketTransportFactory`, from `mf-js-common`, re-exported so you never need to import that package directly). To run in a browser instead, pass a `BrowserWebSocketTransportFactory` as `transportFactory`:
 
