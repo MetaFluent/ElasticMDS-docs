@@ -66,7 +66,7 @@ app needs to make:
 let connection;
 try {
   connection = await connect({
-    host: "localhost",
+    host: "mf-session",
     port: 8900,
     userName: "guest",
     applicationName: "smart-refresh-demo",
