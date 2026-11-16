@@ -37,11 +37,11 @@ npm install /path/to/lib/metafluent-smart-refresh.tgz
 To run the prebuilt example against a deployment, give it the session server host and a query:
 
 ```
-node bin/smart-refresh-demo.js --host localhost --port 8900 \
+node bin/smart-refresh-demo.js --host mf-session --port 8900 \
      "SELECT RIC, DSPLY_NAME, BID, ASK, TRDPRC_1 FROM Quotes.RDF WHERE RIC IN ('SAB.L','BG.L')"
 ```
 
-This assumes the session server runs on the same machine; when it runs elsewhere, pass that machine's hostname as `--host`. The tool prints the initial snapshot, then a line per live update as the market moves; press `Ctrl+C` to stop.
+`mf-session` is the conventional name for the session server your application connects to. Map it to your deployment's session host - the same way the [Quick Start](Quick-Start.md) maps `mf-api-gateway` - or use the `host:port` your operator gives you. (On the single-host Quick Start the session server runs on your own machine, so `localhost:8900` works there.) The tool prints the initial snapshot, then a line per live update as the market moves; press `Ctrl+C` to stop.
 
 ---
 
@@ -52,7 +52,7 @@ This assumes the session server runs on the same machine; when it runs elsewhere
 ```javascript
 const { connect } = require("@metafluent/smart-refresh");
 
-const connection = await connect({ host: "localhost", port: 8900, userName: "guest" });
+const connection = await connect({ host: "mf-session", port: 8900, userName: "guest" });
 const result = await connection.query(
   "SELECT RIC, DSPLY_NAME, BID, ASK, TRDPRC_1 FROM Quotes.RDF WHERE RIC IN ('SAB.L','BG.L')"
 );
@@ -89,7 +89,7 @@ This client covers the same single-table, no-join query scope the rest of the JS
 const { connect, BrowserWebSocketTransportFactory } = require("@metafluent/smart-refresh");
 
 const connection = await connect({
-  host: "localhost",
+  host: "mf-session",
   port: 8900,
   userName: "guest",
   transportFactory: new BrowserWebSocketTransportFactory(),
