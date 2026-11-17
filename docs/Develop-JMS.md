@@ -108,6 +108,8 @@ Content is delivered as JMS `MapMessage`s. Each message carries a type, which th
 - **Status** - a change in the state of the data stream: `OK`, `STALE` (the source may be disconnected), `CLOSED`, `DENIED` (not entitled), or `INVALID` (the request could not be satisfied). `CLOSED`, `DENIED` and `INVALID` end the stream; see [Dynamic Data Conventions](Dynamic-Data-Conventions.md#stream-state).
 - **Stream update** - on a multi-stream subscription (a table, view, or multi-key topic), signals a new stream or a change in the collection's ordering. An application that does not maintain collection order can ignore it.
 
+A subscription Elastic MDS cannot satisfy fails when you create it: `createSubscriber` or `setMessageListener` throws a `JMSException` whose message gives the reason, for example a table that does not exist or a topic name with too few parts, and nothing is delivered for it. A key the source does not know is different: the statement is good, so the subscription is created and its stream ends at once with an `INVALID` Status.
+
 Interpreting these messages correctly - the field and property conventions, the message-type and state codes, the multi-stream details, and how to read the field values - is covered in detail in [Dynamic Data Conventions](Dynamic-Data-Conventions.md). The `com.metafluent.jms.common.DynamicDataConventions` class defines the property names and type codes used throughout.
 
 ---

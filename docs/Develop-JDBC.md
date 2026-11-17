@@ -21,8 +21,9 @@ To use a specific milestone, clone its tag instead - for example `-b MILESTONE-v
 The SDK contains:
 
 - `lib/metafluent.jdbc.jar` - the JDBC driver (`com.metafluent.jdbc.rtc.DriverImpl`). Add this one jar to your classpath to build against Elastic MDS.
-- `examples/src/...` - the source for the example applications, `FirstQuery` and `JDBCTestApp`.
-- `bin/JDBCTestApp.jar` - both examples prebuilt (with the driver bundled), so you can run them without building.
+- `examples/src/...` - the source for the example applications, `FirstQuery`, `JDBCTestApp` and `JDBCMetadataApp`.
+- `bin/JDBCTestApp.jar` - `FirstQuery` and `JDBCTestApp` prebuilt (with the driver bundled), so you can run them without building.
+- `bin/JDBCMetadataApp.jar` - `JDBCMetadataApp` prebuilt, which lists the tables a deployment serves ([worked example](Example-JDBCMetadataApp.md)).
 
 The driver registers itself, so `DriverManager` finds it automatically. Connection URLs take the form `jdbc:metafluent://<host>:<port>`, where the host and port are those of the session server (default port `8900`). If your environment needs the driver named explicitly, add `-Djdbc.drivers=com.metafluent.jdbc.rtc.DriverImpl`.
 
@@ -189,6 +190,31 @@ The row key is available as the column `_KEY` (often aliased, e.g. `SELECT _KEY 
 
 ---
 
+## Checking a statement before you run it
+
+Elastic MDS can tell you what it will do with a statement without running it. The SQL analyzer that serves every driver is also reachable over the API gateway as the `sql-analyzer` API, and its `explain` resource answers with the decisions the analyzer takes while it builds the statement's request: the tables it resolved, how it read each `WHERE` term, and the shape of the request it built. Use it when a statement is refused or behaves unexpectedly, or to see whether a `WHERE` term is a key constraint before you rely on it.
+
+Send the SQL text as the body of a `POST`, as plain text:
+
+```bash
+curl -s -X POST -H 'Content-Type: text/plain' \
+  --data "SELECT RIC, BID, ASK FROM Quotes.RDF WHERE RIC IN ('VOD.L','BT.L')" \
+  http://mf-api-gateway:9090/api/sql-analyzer/v1/explain
+```
+
+The answer is a JSON document. Its `status` is `COMPLETE` when the analysis ran to the end, and `decisions` lists the stages in order, each with a one-line `fSummary` and the fields it rests on:
+
+| Stage | What it tells you |
+|---|---|
+| `PARSE` | The statement parsed, and the tables it names (a function library used in the statement appears as its own table). |
+| `TABLES` | The tables were resolved against the metadata published now. A table that is not deployed stops the analysis here. |
+| `WHERE_TERM` | One entry per `WHERE` term, with the decision taken for it: a key constraint of its table, or a condition applied to the rows. |
+| `REQUEST_BUILT` | The request that would be run: how many tables and child statements it has, whether it creates a view, and its distribution style. |
+
+A statement that cannot be built stops at the failing stage, and the answer carries the reason the driver would have put in its `SQLException`. A `GET` on the same resource answers the name of the catalog the analyzer serves. The `sql-analyzer` API is a singleton (see [REST API](REST-API.md#singletons-and-per-container-apis)), so there is no instance to choose. Nothing is subscribed or placed by an explanation: it is read-only and leaves no statement behind.
+
+---
+
 ## Browsing the tables
 
 Tools that browse a database through `DatabaseMetaData` see the tables you can query. `getCatalogs`, `getSchemas`, `getTableTypes` and `getTables` return every table, narrowed by the names and patterns you pass, as the JDBC documentation describes. These methods, and `getColumns`, answer at once with a complete snapshot of the catalogue as published when you ask: every table, view and function library the cluster has published, and the columns of the tables that publish their column lists. A table that appears later is in your next call. No statement is run for these calls, so the result sets are plain snapshots, not live result sets.
@@ -208,6 +234,8 @@ try (ResultSet columns = metadata.getColumns(null, null, "%", null)) {
 ```
 
 The other `DatabaseMetaData` calls that return a result set, such as `getPrimaryKeys` and `getIndexInfo`, throw `SQLFeatureNotSupportedException`.
+
+The SDK's `bin/JDBCMetadataApp.jar` prints all of this for a deployment in one run: [Worked Example: JDBCMetadataApp](Example-JDBCMetadataApp.md).
 
 ---
 

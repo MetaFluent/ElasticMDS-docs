@@ -22,7 +22,7 @@ Every message carries its type in the `JMS_METAFLUENT_MSG_TYPE` property. An app
 
 | Type | Meaning |
 |------|---------|
-| **IMAGE** | The complete set of initial field values for a stream, sent when the subscription is established. May also carry a data-condition indication. |
+| **IMAGE** | The complete set of field values for a stream, sent when the subscription is established and again when a STALE stream recovers; a recovery's image carries the state OK. May also carry a data-condition indication. |
 | **UPDATE** | A change to one or more field values. Does not change stream state. |
 | **STATUS** | A change in the data condition or stream state (see below). Carries no field data. |
 | **STREAM_UPDATE** | On a multi-stream topic, signals a new stream or a change in ordering. Carries no field data; apply these in the order received. |
@@ -38,7 +38,7 @@ A stream's state is carried in the `JMS_METAFLUENT_STATE` property. It is option
 | State | Meaning |
 |-------|---------|
 | **OK** | The data for this stream is current. |
-| **STALE** | The data is suspect (for example, the source has disconnected). The provider will try to recover the stream with a fresh image - **do not re-subscribe**. |
+| **STALE** | The data is suspect (for example, the source has disconnected). The provider will try to recover the stream with a fresh image: the recovery arrives as an IMAGE in state OK, not as an UPDATE, and is the stream's new baseline - **do not re-subscribe**. If the source confirms the recovery with a status before its image, that STATUS (OK) arrives first, then the IMAGE. |
 | **DENIED** | The requester is not entitled to the content. It can arrive on the initial request or later (entitlements changed). The stream has ended for this subscription. For a single-stream topic, close the subscription. It does not resume if the entitlement is granted later; subscribe again to get the content. |
 | **INVALID** | The request is erroneous and can never be satisfied. The stream has ended for this subscription. Do not resubmit it. |
 | **CLOSED** | The stream has ended for this subscription. It may become available later, so subscribing again at some later time is reasonable. |

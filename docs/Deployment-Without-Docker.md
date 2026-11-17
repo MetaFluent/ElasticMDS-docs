@@ -47,7 +47,7 @@ The `mf-projector-mds`, `mf-projector-mama`, and `mf-mds-consolidated` packages 
    ln -s /opt/openmama/config app/mama/config
    ```
 
-2. **Bridge specification.** In `app/config/deployment-config/resources/mama-adapter/`, copy `mama-spec-sample.json.txt` to `mama-spec.json` and edit it to describe your bridges and feeds.
+2. **Bridge specification.** In `app/config/deployment-config/resources/mama-adapter/`, copy `mama-spec-sample.json.txt` to `mama-spec.json` and edit it to describe your bridges and feeds. A feed is served by one adapter: name a feed in the MAMA specification only if the ETA adapter of the same projector does not also read it, or exclude it from the ETA adapter's feeds. Two adapters reading the same feed would publish the same table twice.
 
 To run a projector with ETA feeds only, turn the MAMA adapter off by setting `METAFLUENT_MAMA_DISABLED=true` in the launch environment.
 

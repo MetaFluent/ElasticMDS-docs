@@ -55,7 +55,7 @@ curl -s "http://mf-api-gateway:9090/api/gateway/v1/apis/*/properties/name"
 
 ```json
 ["application-state","push-distribution-server","log-service","config","projector",
- "eta-client","session-server","orchestration","conflation-rules","log","gateway", ...]
+ "eta-client","session-server","orchestration","conflation-rules","log","gateway","sql-analyzer", ...]
 ```
 
 **2. Read one API's `apidoc`.** Each API publishes an OpenAPI 3.0.3 document describing every path, verb, and field it exposes:

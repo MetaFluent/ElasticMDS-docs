@@ -107,7 +107,7 @@ Your configuration lives in the deployment project and is applied each time you 
 - **Your OpenMAMA installation**, as a directory with `lib/` (`libmama.so` and your bridge) and `config/` (`mama.properties`). The application looks for it at `/app/mama`:
   - **Docker or Kubernetes:** mount it at `/app/mama`, for example `-v /opt/openmama:/app/mama:ro`. With a deployment project, set `METAFLUENT_MAMA_INSTALL=/opt/openmama` and `scripts/start` mounts it for you; `scripts/bake` builds it into your own image instead.
   - **Installation package:** place it under `app/mama/` - see [MAMA feeds](Deployment-Without-Docker.md#mama-feeds).
-- **A bridge specification** describing your bridges and feeds: in `deployment-config/resources/mama-adapter/`, copy `mama-spec-sample.json.txt` to `mama-spec.json` and edit it.
+- **A bridge specification** describing your bridges and feeds: in `deployment-config/resources/mama-adapter/`, copy `mama-spec-sample.json.txt` to `mama-spec.json` and edit it. A feed is served by one adapter: a feed named in the MAMA specification must not also be read by the ETA adapter of the same projector.
 
 To run with ETA feeds only, turn the MAMA adapter off with `METAFLUENT_MAMA_DISABLED=true`. The cookbook examples do this, since they run against the ETA simulator.
 

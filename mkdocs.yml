@@ -108,6 +108,7 @@ nav:
       - "JDBC":
           - "Overview": Develop-JDBC.md
           - "Worked Example: JDBCTestApp": Example-JDBCTestApp.md
+          - "Worked Example: JDBCMetadataApp": Example-JDBCMetadataApp.md
       - "JS":
           - "Overview": Develop-JS.md
           - "Worked Example: smart-refresh-demo (command line)": Example-smart-refresh-demo.md
