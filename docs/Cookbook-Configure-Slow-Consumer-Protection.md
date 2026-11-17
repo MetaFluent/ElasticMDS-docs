@@ -195,7 +195,7 @@ An expression defines the contents of a conflated update. Any valid SQL function
 
 #### policies
 
-A policy holds the thresholds at which automatic conflation engages and disengages for a matching session. Three are shipped:
+Each application is continuously assessed for its capacity to process images and updates, and these assessments determine if and when conflation engages for that application. A policy holds the thresholds applied to that assessment for a matching session: conflation engages when the traffic offered to the application rises to the high-water fraction of its capacity, and disengages when the traffic falls to the low-water fraction. Three are shipped:
 
 | Policy | `highWaterFraction` | Engagement |
 |--------|---------------------|------------|
