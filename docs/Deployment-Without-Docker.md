@@ -71,6 +71,8 @@ export JAVA_HOME=/usr/lib/jvm/java-17
 
 If `JAVA_HOME` is not set, `run` stops with a clear error rather than guessing. `app/logs/` must be writable by the account you run as.
 
+To tune a component's heap, garbage collector or other JVM options, set the `METAFLUENT_JVM_*` variables in the environment you start `run` in - see [JVM memory and options](Configuration-Advanced.md#jvm-memory-and-options). The heap dump and GC log land in `app/logs/`.
+
 ---
 
 ## Packaging for a managed install

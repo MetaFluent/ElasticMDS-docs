@@ -138,7 +138,7 @@ The history names the connection and the logs show the drop and retry - for the 
 | Symptom | Likely cause | Remedy |
 |---------|--------------|--------|
 | One client lags while others are fine | The client is a **slow consumer**; the system engaged auto-conflation to protect the others | Protective, not an error. Confirm with the shards query below; if chronic, the client must read faster or subscribe to less |
-| A container is sluggish or reports `STRESSED` | CPU or memory pressure - too much subscribed content, an undersized container, or a runaway consumer | Add capacity, or let auto-scaling add a projector where it applies ([Architecture: Advanced](Architecture-Advanced.md)) |
+| A container is sluggish or reports `STRESSED` | CPU or memory pressure - too much subscribed content, an undersized container, or a runaway consumer | Add capacity, or let auto-scaling add a projector where it applies ([Architecture: Advanced](Architecture-Advanced.md)); or give the component more memory ([JVM memory and options](Configuration-Advanced.md#jvm-memory-and-options)) |
 
 ```
 curl -s "http://mf-api-gateway:9090/api/push-distribution-server/v1/*/shards/autoConflationEngaged=true/shardID,offeredUpdates"
@@ -152,6 +152,8 @@ curl -s "http://mf-api-gateway:9090/api/application-state/v1/*/name,system"
 **What host do I use for REST calls?** `http://mf-api-gateway:9090`, always - never `localhost`. If a REST call cannot connect, the `mf-api-gateway` name is not resolving from your machine: set up the DNS entry ([Deployment: Basics](Deployment-Basics.md#setting-up-a-dns-entry-for-your-api-gateway)), and confirm the gateway container is up.
 
 **Where are the logs?** Each component writes to its own log directory on disk, and the centralized log service answers queries across all of them at once ([Operations: Logging](Operations-Logging.md)).
+
+**A component restarted on its own - what do I look at?** A component exits on an `OutOfMemoryError` so that a standby or your orchestrator can recover it. Look in its log directory for the heap dump and the `gc-<component>.log` file ([JVM memory and options](Configuration-Advanced.md#always-on-behaviour)).
 
 **How do I turn up logging for one component?** `PATCH` its log level, and set it back when you are done ([REST API](REST-API.md#controlling-the-running-system)).
 

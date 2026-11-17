@@ -114,7 +114,7 @@ curl -s "http://mf-api-gateway:9090/api/application-state/v1/*/name,system"
 ]
 ```
 
-`summary.loadAverage` and `summary.memoryUsedPercent` give load and memory pressure at a glance.
+`summary.loadAverage` and `summary.memoryUsedPercent` give load and memory pressure at a glance. To change how much memory a component's JVM uses, see [JVM memory and options](Configuration-Advanced.md#jvm-memory-and-options).
 
 **Servers and shards - throughput.** The push distribution server reports per-shard delivery stats, and whether the system has had to protect a slow consumer:
 
@@ -177,7 +177,7 @@ If different containers report different versions for the same component, the de
 
 Two ways in:
 
-- **On disk.** Every component writes to its log directory - the same place the configuration reports land (see [Configuration: Basics](Configuration-Basics.md)).
+- **On disk.** Every component writes to its log directory - the same place the configuration reports land (see [Configuration: Basics](Configuration-Basics.md)). The JVM's garbage-collection log (`gc-<component>.log`) and, after an `OutOfMemoryError`, a heap dump are written there too ([JVM memory and options](Configuration-Advanced.md#always-on-behaviour)).
 - **Over the gateway**, where the deployment exposes the log service - ask for recent errors:
 
   ```

@@ -115,6 +115,12 @@ To publish terminal pages as one field per screen row, see [Configuration: Page 
 
 ---
 
+## JVM memory
+
+A component's JVM sizes itself from the memory its container can see. To give a component more memory, fix its heap, or choose a garbage collector, set `METAFLUENT_JVM_*` variables in the service's `environment:` - the variables and worked examples are in [Configuration: Advanced](Configuration-Advanced.md#jvm-memory-and-options).
+
+---
+
 ## Building a self-contained image
 
 Running the stock image with your deployment configuration mounted as a volume is one way to operate. The deployment project also provides tools to build your own, fully configured and self-contained image. We call this **baking** a configuration.
