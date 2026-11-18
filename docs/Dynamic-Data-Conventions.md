@@ -40,7 +40,7 @@ A stream's state is carried in the `JMS_METAFLUENT_STATE` property. It is option
 | **OK** | The data for this stream is current. |
 | **STALE** | The data is suspect (for example, the source has disconnected). The provider will try to recover the stream with a fresh image - **do not re-subscribe**. |
 | **DENIED** | The requester is not entitled to the content. It can arrive on the initial request or later (entitlements changed). The stream has ended for this subscription. For a single-stream topic, close the subscription. It does not resume if the entitlement is granted later; subscribe again to get the content. |
-| **INVALID** | The request is erroneous and can never be satisfied. The stream has ended for this subscription. Do not resubmit it. |
+| **INVALID** | The source has no such item now. The stream has ended for this subscription. The item may exist later, so subscribing again later might succeed. |
 | **CLOSED** | The stream has ended for this subscription. It may become available later, so subscribing again at some later time is reasonable. |
 
 OK and STALE are the states of a live stream. A stream that has reported INVALID, DENIED or CLOSED has ended for that subscription and delivers nothing more; to get the content again, subscribe again, and the new subscription is checked afresh.
