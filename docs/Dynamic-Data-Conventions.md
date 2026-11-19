@@ -40,10 +40,46 @@ A stream's state is carried in the `JMS_METAFLUENT_STATE` property. It is option
 | **OK** | The data for this stream is current. |
 | **STALE** | The data is suspect (for example, the source has disconnected). The provider will try to recover the stream with a fresh image - **do not re-subscribe**. |
 | **DENIED** | The requester is not entitled to the content. It can arrive on the initial request or later (entitlements changed). The stream has ended for this subscription. For a single-stream topic, close the subscription. It does not resume if the entitlement is granted later; subscribe again to get the content. |
-| **INVALID** | The source has no such item now. The stream has ended for this subscription. The item may exist later, so subscribing again later might succeed. |
-| **CLOSED** | The stream has ended for this subscription. It may become available later, so subscribing again at some later time is reasonable. |
+| **INVALID** | The source has no such item, for example a key it does not know. The stream carries no values. The stream has ended for this subscription. The item may exist later, so subscribing again later might succeed. |
+| **CLOSED** | The item existed and its source removed or closed it: a row deleted from its table, a stream the provider closed. The values already delivered are the item's last values. The stream has ended for this subscription. The item may become available later, so subscribing again at some later time is reasonable. |
 
-OK and STALE are the states of a live stream. A stream that has reported INVALID, DENIED or CLOSED has ended for that subscription and delivers nothing more; to get the content again, subscribe again, and the new subscription is checked afresh.
+OK and STALE are the states of a live stream. A stream that has reported INVALID, DENIED or CLOSED has ended for that subscription and delivers nothing more.
+
+### Subscribing again after a stream has ended
+
+MetaFluent leaves the decision to ask again for ended content with your application. It keeps the end it reported: a reconnection, a failover or a change at the source delivers nothing more on an ended stream. When the application wants the content, it subscribes again, and the new subscription is answered with the content as its source has it then and is checked afresh.
+
+Within one session, every subscriber to the same topic shares one stream. A subscriber that joins a topic whose stream has ended receives the same final state as the others. To ask again, close every subscription the session has to that topic, then subscribe:
+
+```java
+// Both consumers are on the same session and the same topic.
+firstConsumer.close();
+secondConsumer.close();
+
+// The next subscription is a new request.
+MessageConsumer consumer = session.createConsumer(topic);
+consumer.setMessageListener(listener);
+```
+
+A row of a multi-stream topic that has ended stays in the collection with its final state. Close the subscriptions to the topic and subscribe again to have every row answered anew.
+
+### Tables that applications publish
+
+Some tables hold rows that applications publish. A subscriber to such a table sees these states:
+
+| Situation | State | Text |
+|-----------|-------|------|
+| No application has published the row. | INVALID | `No such row` |
+| A publisher has opened the row and has yet to send its first image. | STALE | `Publisher attached, no image published yet` |
+| The publisher has sent an image. | OK | |
+| The publisher left without ever publishing the row. | INVALID | `No such row` |
+| The publisher has disconnected. | STALE, or CLOSED where the table closes a row when its publisher leaves | `Publisher detached` |
+| The row has been deleted. | CLOSED | `Row deleted` |
+
+Two cases follow from the rule that an ended stream stays ended:
+
+- **Subscribing before the row is published.** The subscription is answered INVALID, `No such row`, and has ended. When the publisher publishes the row later, subscribe again to receive it. A subscription made once the publisher has opened the row waits, STALE, and receives the image when the publisher sends it.
+- **Deleting a row and publishing it again.** The delete ends the row's stream with CLOSED. Publishing the row again creates it anew; subscribers that were told CLOSED subscribe again to receive the new row.
 
 Rules that always hold:
 

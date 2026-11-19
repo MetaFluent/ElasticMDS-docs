@@ -51,6 +51,8 @@ The `mf-projector-mds`, `mf-projector-mama`, and `mf-mds-consolidated` packages 
 
 To run a projector with ETA feeds only, turn the MAMA adapter off by setting `METAFLUENT_MAMA_DISABLED=true` in the launch environment.
 
+The adapter waits a limited time for each item's first image; the settings and their defaults are in [Deployment: Basics - MAMA feeds](Deployment-Basics.md#mama-feeds).
+
 To publish terminal pages as one field per screen row, see [Configuration: Page Feeds](Configuration-Page-Feeds.md).
 
 ---

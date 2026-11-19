@@ -111,6 +111,20 @@ Your configuration lives in the deployment project and is applied each time you 
 
 To run with ETA feeds only, turn the MAMA adapter off with `METAFLUENT_MAMA_DISABLED=true`. The cookbook examples do this, since they run against the ETA simulator.
 
+**Subscription timeout.** The adapter waits for each item's first image for a limited time. Two settings decide how long:
+
+| Setting | Default | Meaning |
+|---------|---------|---------|
+| `adapter.subscriptionTimeoutSeconds` | `10` | Seconds to wait for the image before the subscription is tried again. |
+| `adapter.subscriptionRetries` | `2` | How many times the subscription is tried again. |
+
+The total wait is the timeout multiplied by one more than the retries: about 30 seconds with the defaults. An item whose image has not arrived by then ends CLOSED with the text `Subscription timeout`, and applications subscribe again when they want it. The timeout is a safeguard for a source that answers with status messages and never sends the image, so set it longer than the slowest response you expect from your source. To change the settings, add them to `deployment.properties` by their fully-qualified names (see [Configuration Reference](Configuration-Reference.md#short-names-and-fully-qualified-names)):
+
+```
+com.metafluent.blueprint.rtc.content.adapter.mama.adapter.subscriptionTimeoutSeconds=20
+com.metafluent.blueprint.rtc.content.adapter.mama.adapter.subscriptionRetries=2
+```
+
 To publish terminal pages as one field per screen row, see [Configuration: Page Feeds](Configuration-Page-Feeds.md).
 
 ---

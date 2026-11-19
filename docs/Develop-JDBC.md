@@ -129,13 +129,13 @@ ResultSet resultSet = statement.executeQuery(
 |---|---|---|
 | 1 | OK | The row is current. |
 | 2 | STALE | The row's values may not be current. It stays readable, and it becomes OK again by itself when its data recovers. |
-| 3 | INVALID | The source has no such item now, for example a key it does not know. The row's stream has ended for this statement. The item may exist later, so running the query again later might succeed. |
+| 3 | INVALID | The source has no such item, for example a key it does not know. The row's columns read NULL. The row's stream has ended for this statement. The item may exist later, so running the query again later might succeed. |
 | 4 | DENIED | You are not entitled to the row's content. A row that has been reported DENIED stays DENIED for that statement, even if the entitlement is granted later; run the query again to read it. |
-| 5 | CLOSED | The source closed the row's item. It may become available again later. |
+| 5 | CLOSED | The source removed or closed the row's item. The row keeps the last values it had. The row's stream has ended for this statement; run the query again to read the item if it becomes available. |
 
 These are the same states a JMS stream carries; see [Dynamic Data Conventions](Dynamic-Data-Conventions.md#stream-state).
 
-A row goes STALE when its source marks the item stale (a row joined to a stale item goes STALE with it), or when the driver cannot refresh the rows from their server. Each recovers by itself: the source sends the item again, or the next refresh succeeds. A row whose item the source has removed or closed is STALE as well, its text ending in `CLOSED`, and keeps the last values it had; that item's stream has ended for this statement, so run the query again to read it if it becomes available. Act on the code and display the text; the text is for people, not for parsing.
+A row goes STALE when its source marks the item stale (a row joined to a stale item goes STALE with it), or when the driver cannot refresh the rows from their server. Each recovers by itself: the source sends the item again, or the next refresh succeeds. A row whose item the source has removed or closed keeps the last values it had and does not recover by itself. It is reported STALE with a text that ends in `CLOSED`, such as `VOD.L from Quotes.RDF CLOSED`, or CLOSED with the text `Content closed`. Either way that item's stream has ended for this statement, so run the query again to read it if it becomes available. Act on the code and display the text; the text is for people, not for parsing.
 
 ```java
 resultSet.absolute(0);
