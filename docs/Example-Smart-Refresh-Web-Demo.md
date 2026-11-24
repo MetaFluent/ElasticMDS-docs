@@ -8,8 +8,8 @@ pattern with a browser transport, a URL-driven query, and an actual UI built aro
 
 This page walks through the app section by section. The code below is the actual example, with
 some argument-handling and DOM-plumbing details elided as `// ...`; the complete files are in the
-SDK at `web/src/main.ts`, `web/src/table.ts`, and `web/src/rate.ts`, and `web/index.html` contains
-it prebuilt.
+SDK at `examples/web/src/main.ts`, `examples/web/src/table.ts`, and `examples/web/src/rate.ts`,
+with `examples/web/index.html` as its page shell.
 
 **Audience:** developers building a client-side web app on Elastic MDS, who have read
 [JavaScript Application Development](Develop-JS.md).
@@ -19,8 +19,9 @@ it prebuilt.
 ## Running it
 
 ```
-cd web
-npm run serve
+cd examples/web
+npm install
+npm run dev
 ```
 
 Then open, with a query in the URL - there is no default, so this is required:
@@ -108,7 +109,7 @@ table.render(result.rows);
 result.refreshRate = initialRateHz;
 ```
 
-`ResultTable.setColumns()`/`.render()` (`web/src/table.ts`) build the table and its header row
+`ResultTable.setColumns()`/`.render()` (`examples/web/src/table.ts`) build the table and its header row
 from the result's columns:
 
 ```javascript
@@ -180,7 +181,7 @@ which `(row, column)` positions in the *current* array to flash.
 
 ## 5. The refresh-rate control
 
-A single slider (0-100) maps log-scaled onto `MIN_RATE_HZ`..`MAX_RATE_HZ` (`web/src/rate.ts`), so
+A single slider (0-100) maps log-scaled onto `MIN_RATE_HZ`..`MAX_RATE_HZ` (`examples/web/src/rate.ts`), so
 one control usefully covers both a slow trickle and a fast "Beast Mode" ceiling:
 
 ```javascript
