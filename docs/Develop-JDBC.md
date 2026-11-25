@@ -221,6 +221,8 @@ Tools that browse a database through `DatabaseMetaData` see the tables you can q
 
 `getTables` reports each table's `TABLE_TYPE`: `TABLE` for a table, `VIEW` for a view, and `FUNCTION_TABLE` for a function library. Views are listed as soon as they exist: the view a `CREATE VIEW` statement defines, and the chain view of a market-data table such as `Chains.RDF`. `getTableTypes` returns the types of the tables listed.
 
+The functions each library offers, and how to call them, are on [Function Libraries](Function-Libraries.md).
+
 `getColumns` returns the columns of tables with a fixed set of columns, such as tables read from a relational database or from files. A market-data table such as `Quotes.RDF` is listed by `getTables`, and `getColumns` returns no columns for it: its fields are those of the [content model](Dynamic-Data-Conventions.md).
 
 ```java
