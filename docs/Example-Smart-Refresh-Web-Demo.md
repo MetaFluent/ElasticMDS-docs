@@ -8,8 +8,8 @@ pattern with a browser transport, a URL-driven query, and an actual UI built aro
 
 This page walks through the app section by section. The code below is the actual example, with
 some argument-handling and DOM-plumbing details elided as `// ...`; the complete files are in the
-SDK at `web/src/main.ts`, `web/src/table.ts`, and `web/src/rate.ts`, and `web/index.html` contains
-it prebuilt.
+SDK at `examples/web/src/main.ts`, `examples/web/src/table.ts`, and `examples/web/src/rate.ts`,
+with `examples/web/index.html` as its page shell.
 
 **Audience:** developers building a client-side web app on Elastic MDS, who have read
 [JavaScript Application Development](Develop-JS.md).
@@ -19,8 +19,9 @@ it prebuilt.
 ## Running it
 
 ```
-cd web
-npm run serve
+cd examples/web
+npm install
+npm run dev
 ```
 
 Then open, with a query in the URL - there is no default, so this is required:
@@ -66,8 +67,8 @@ app needs to make:
 let connection;
 try {
   connection = await connect({
-    host: import.meta.env.VITE_SESSION_HOST,
-    port: Number(import.meta.env.VITE_SESSION_PORT),
+    host: "mf-session",
+    port: 8900,
     userName: "guest",
     applicationName: "smart-refresh-demo",
     transportFactory: new BrowserWebSocketTransportFactory(),
@@ -108,10 +109,8 @@ table.render(result.rows);
 result.refreshRate = initialRateHz;
 ```
 
-`ResultTable.setColumns()`/`.render()` (`web/src/table.ts`) build an ordinary HTML `<table>` by
-hand - deliberately not a grid library. A grid library earns its weight on sorting, filtering, and
-virtualizing large datasets; this demo has none of those needs, and a handful of cells flashing on
-change is simplest as direct DOM updates:
+`ResultTable.setColumns()`/`.render()` (`examples/web/src/table.ts`) build the table and its header row
+from the result's columns:
 
 ```javascript
 setColumns(columns) {
@@ -143,9 +142,9 @@ for await (const update of result) {
 }
 ```
 
-`flashChanges()` re-renders the (small) table, then restarts a CSS flash animation on each changed
-cell - removing and re-adding the class alone would not restart an already-running animation, so it
-forces a reflow in between:
+`flashChanges()` re-renders the table, then adds a `flash` CSS class to each changed cell -
+removed and immediately re-added, so the animation restarts even if the cell is still mid-flash
+from the previous tick:
 
 ```javascript
 flashChanges(rows, changed) {
@@ -174,16 +173,15 @@ function flash(cell) {
 }
 ```
 
-Row identity and re-sorting are already handled upstream - `LiveResult` diffs by each row's own
-identity, not array position, so a result that re-sorts with no value actually changing reports no
-changes at all. `flashChanges()` only ever needs to know which `(row, column)` positions in the
-*current* array to flash.
+`LiveResult` diffs by each row's own identity, not array position, so a result that re-sorts with
+no value actually changing reports no changes at all - `flashChanges()` only ever needs to know
+which `(row, column)` positions in the *current* array to flash.
 
 ---
 
 ## 5. The refresh-rate control
 
-A single slider (0-100) maps log-scaled onto `MIN_RATE_HZ`..`MAX_RATE_HZ` (`web/src/rate.ts`), so
+A single slider (0-100) maps log-scaled onto `MIN_RATE_HZ`..`MAX_RATE_HZ` (`examples/web/src/rate.ts`), so
 one control usefully covers both a slow trickle and a fast "Beast Mode" ceiling:
 
 ```javascript
@@ -223,28 +221,6 @@ window.addEventListener("beforeunload", () => {
   connection.close();
 });
 ```
-
----
-
-## 7. The one browser-specific plumbing detail: a dependency-free `Buffer` shim
-
-This codebase's wire codec uses Node's `Buffer` throughout, which browsers don't have natively.
-`web/src/main.ts` imports a small polyfill first, before anything else, specifically so it exists
-by the time a real `connect()`/`.query()` call needs it:
-
-```javascript
-import "./buffer-polyfill"; // must be the first import - see that file's comment
-```
-
-This is not a general-purpose `Buffer` reimplementation - it's a short, from-scratch shim covering
-only the handful of methods the codec actually calls (reading/writing fixed-width integers,
-encoding strings, base64), built on nothing but the browser's own `Uint8Array`/`DataView`/
-`TextEncoder`/`TextDecoder`. It is deliberately not a third-party package: this product's
-customers include institutions that do not allow downloading third-party content at all, even for
-development, so every dependency in this SDK is either something you already have (Node, a
-browser) or something MetaFluent controls directly - nothing resolved from a public package
-registry. You will not need to touch this file for an ordinary web app; it exists so `Buffer`
-simply works.
 
 ---
 
