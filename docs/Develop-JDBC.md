@@ -242,33 +242,6 @@ The SDK's `bin/JDBCMetadataApp.jar` prints all of this for a deployment in one r
 
 ---
 
-## Combining data from multiple feeds into one query
-
-A deployment often carries the same kind of content from more than one feed, each with its own symbols and field names. One query can read them all: a `SELECT` per feed, converting that feed's columns to a common shape, combined with `UNION ALL`.
-
-```sql
-SELECT RIC AS SYMBOL, 'RDF' AS SOURCE, BID, ASK
-  FROM Quotes.RDF WHERE RIC IN ('VOD.L', 'BG.L')
-UNION ALL
-SELECT TICKER AS SYMBOL, 'BPIPE' AS SOURCE, PX_BID AS BID, PX_ASK AS ASK
-  FROM Quotes.BPIPE WHERE TICKER IN ('SAB LN Equity', 'WG LN Equity')
-```
-
-| SYMBOL | SOURCE | BID | ASK |
-|---|---|---|---|
-| VOD.L | RDF | 162.65 | 162.70 |
-| BG.L | RDF | 1312.5 | 1313.0 |
-| SAB LN Equity | BPIPE | 2240.0 | 2241.0 |
-| WG LN Equity | BPIPE | 1484.5 | 1485.0 |
-
-How the branches combine:
-
-- **Columns align by position.** Every branch selects the same number of columns, of the same types, in the same order, and the result takes its column names from the first branch. Renaming a feed's column (`PX_BID AS BID`) is how a branch fits the common shape; each branch's `WHERE` applies to its own table.
-- **A constant names the source.** `'RDF' AS SOURCE` is a column like any other, with that value in every row of its branch, so each row says which feed it came from. The key column gets a name of your own, `SYMBOL` here, since each feed names its symbols its own way.
-- **The result is live.** A row updates as its feed does, and a row's data state is its own: if one feed goes stale, that branch's rows show it while the others keep updating.
-
----
-
 ## Derived content with views
 
 A `SELECT` can compute new columns - the `MFMath.AVG(BID, ASK) AS MID` above is a derived mid-price the source never sent. `CREATE VIEW` turns such a query into a named, reusable table that others can subscribe to or query:
@@ -286,6 +259,7 @@ The view is live like any other content: its rows update as the underlying marke
 ## Where to go next
 
 - [JMS Application Development](Develop-JMS.md) - subscribe to the same content and stream it.
+- [Solutions Cookbook](Solutions-Cookbook.md) - solutions built from statements, such as one consolidated quote across feeds.
 - [Worked Example: JDBCTestApp](Example-JDBCTestApp.md) - the full command-line query tool, section by section.
 - [Developing with TLS](Develop-TLS.md) - connect over TLS.
 - [Dynamic Data Conventions](Dynamic-Data-Conventions.md) - the field and content model behind the tables you query.

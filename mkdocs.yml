@@ -119,6 +119,9 @@ nav:
           - "Function Libraries": Function-Libraries.md
       - "Security":
           - "TLS": Develop-TLS.md
+  - "Solutions Cookbook":
+      - "Overview": Solutions-Cookbook.md
+      - "One Consolidated Quote Across Feeds": Solution-Consolidated-Quote.md
   - "Reference":
       - "REST API": REST-API.md
       - "Log Message Reference": Log-Message-Reference.md
