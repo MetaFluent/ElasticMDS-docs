@@ -49,6 +49,7 @@ one kind of source; a deployment runs the projectors it needs.
 |-------|-----------------------|----------------|
 | `mf-projector-rdbms` | Exposes tables from any JDBC-compliant relational database as content. The JDBC driver is supplied by the operator. | `deploy-mf-projector-rdbms` |
 | `mf-projector-socrata` _(forthcoming)_ | Exposes datasets from a Socrata open-data platform as content. | _(forthcoming)_ |
+| `mf-projector-calendar` | Publishes business calendars from files as tables that SQL and date functions read. See [Configuration: Business Calendars](Configuration-Calendar.md). | `deploy-mf-projector-calendar` |
 
 ### Computed content
 

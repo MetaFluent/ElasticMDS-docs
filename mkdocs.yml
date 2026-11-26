@@ -81,6 +81,7 @@ nav:
       - "TLS": Configuration-TLS.md
       - "Page Feeds": Configuration-Page-Feeds.md
       - "Socrata Open Data": Configuration-Socrata.md
+      - "Business Calendars": Configuration-Calendar.md
   - "Configuration Cookbook":
       - "Configure DACS": Cookbook-Configure-DACS.md
       - "Slow Consumer Protection": Cookbook-Configure-Slow-Consumer-Protection.md
