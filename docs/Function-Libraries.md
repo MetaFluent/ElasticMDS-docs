@@ -44,6 +44,7 @@ The `*` selects every function in the collection, and the fields after it are th
 
 ## Where to go next
 
+- [Business Day Functions (MFDate)](Function-Library-MFDate.md) - dates, and business days over a calendar.
 - [REST API](REST-API.md) - addressing instances, collections and fields through the gateway.
 - [JDBC Application Development](Develop-JDBC.md) - the SQL you can use, and derived content with views.
 - [JMS Application Development](Develop-JMS.md) - selectors and conflation.

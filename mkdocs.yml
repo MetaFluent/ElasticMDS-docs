@@ -118,6 +118,7 @@ nav:
           - "Market Data Context": Dynamic-Data-Conventions.md
           - "Entitlements Context": Entitlements-Context.md
           - "Function Libraries": Function-Libraries.md
+          - "Business Day Functions (MFDate)": Function-Library-MFDate.md
       - "Security":
           - "TLS": Develop-TLS.md
   - "Solutions Cookbook":

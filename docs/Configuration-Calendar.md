@@ -10,7 +10,7 @@ The calendar adapter publishes business calendars - which days are business days
 
 - **Sources.** A source is a directory of two CSV files holding calendars: their ranges, weekend rules and exception days.
 - **A calendar set.** A set is a named collection of calendars, for example `Site`. One JSON descriptor says which sources the set draws from, in order of preference, and optionally an overrides source and code mapping.
-- **Tables.** Each set is published as four tables carrying the set's name. Date functions read these tables, and so can any SQL query.
+- **Tables.** Each set is published as three tables carrying the set's name. The [business day functions](Function-Library-MFDate.md) read these tables, and so can any SQL query.
 
 Examples ship in the deployment's config resources: `calendars/sample/` with sample `SIFMA_US` and `TARGET2` calendars for 2025 to 2027, `calendars/site-overrides/overrides.csv` (a header and a commented example) and `calendar-sets/Site.json.txt`. The sample calendars are worked out from the usual holiday rules. They are not a market's published calendar; for production, supply calendars from your own authoritative source.
 
@@ -145,7 +145,7 @@ Each entry has its `position` in the file, `calendar`, `date`, `action`, `descri
 
 ## The tables
 
-A set named `Site` is published as four tables, each with the set's name in its own schema.
+A set named `Site` is published as three tables, each with the set's name in its own schema.
 
 ### Calendars.Site
 
@@ -182,30 +182,12 @@ One row per calendar and year. Key column `calendar_year` (STRING, `<calendar>/<
 
 A date outside a calendar's `first_date` to `last_date` is not covered. In the first and last year's string, the days outside the range follow the weekend rule only and are not answers, so a reader checks the range.
 
-### CalendarYears.Site
-
-The year rows read by calendar. Read it one calendar at a time:
+The year rows are an ordinary table. Read them all, or name the keys wanted:
 
 ```sql
-SELECT * FROM CalendarYears.Site WHERE calendar = 'SIFMA_US'
+SELECT * FROM CalendarYearRows.Site
+SELECT * FROM CalendarYearRows.Site WHERE calendar_year IN ('SIFMA_US/2026','SIFMA_US/2027')
 ```
-
-A query that names no calendar is refused. For the calendar asked for, the table gives first the calendar's own row and then one row per year.
-
-- **The own row** has key `calendar_year` equal to the calendar's key, and the columns `calendar`, `status`, `first_date`, `last_date` and `reason`.
-- **The year rows** have the same columns as `CalendarYearRows`.
-
-`status` is `KNOWN` when the set has the calendar: `first_date` and `last_date` are its range and `reason` is empty. `status` is `UNKNOWN` when the set has no such calendar: `reason` says so (for example `no calendar SIFMA_UX in Calendars.Site`), the dates are blank and there are no year rows. If the calendar is added later, an open statement sees the own row change to `KNOWN` and the year rows arrive.
-
-#### Joint calendars
-
-A key of several calendar names joined by `+` is answered as one calendar:
-
-```sql
-SELECT * FROM CalendarYears.Site WHERE calendar = 'SIFMA_US+TARGET2'
-```
-
-A day is a business day when it is one in every part, and the range is the dates every part covers. The status is `UNKNOWN` if any part is unknown (the reason names the part) or if the parts cover no date in common. Nothing is stored for a joint calendar. The key may be written in any order and with spaces (`TARGET2 + SIFMA_US`); it is read as the names sorted and joined without spaces.
 
 ---
 
@@ -213,7 +195,7 @@ A day is a business day when it is one in every part, and the range is the dates
 
 The adapter watches each source directory. When a file is made, changed or removed, it is read again, whole, once the directory has been quiet for `changeSettleMilliseconds`, for every set that names the source. No restart is needed.
 
-Open statements receive only what changed. Adding a holiday changes that day's row in `CalendarDays` and that year's row for the calendar (one row), and the same year's row for any joint calendar being read that includes it.
+Open statements receive only what changed. Adding a holiday changes that day's row in `CalendarDays` and that year's row in `CalendarYearRows`. The [business day functions](Function-Library-MFDate.md) over the calendar recompute, and they accept several calendars joined by `+`.
 
 ---
 
@@ -224,7 +206,7 @@ A file that is missing or unreadable, or a header that is not the file's columns
 - **After the set is published.** The tables stay as they are and their state is STRESSED until a read succeeds. `MF-CAL-005` is raised (rate-limited). The set reads again when the files change.
 - **At start.** After each successful read, the adapter saves the set's calendars in its snapshot directory. If the files cannot be read at start and saved calendars exist, the set starts from them, STRESSED, and `MF-CAL-004` says when they were saved. With nothing saved, the set's tables are in INITIALIZATION_ERROR with the reason and `MF-CAL-003`, and they are not offered. The set starts by itself once the files can be read.
 
-The calendar alerts `MF-CAL-001` to `MF-CAL-011` in the [Log Message Reference](Log-Message-Reference.md) give the meaning of each message and what to do.
+The calendar alerts `MF-CAL-001` to `MF-CAL-006` and `MF-CAL-008` to `MF-CAL-011` in the [Log Message Reference](Log-Message-Reference.md) give the meaning of each message and what to do.
 
 ---
 
@@ -236,6 +218,7 @@ A calendar set's tables are open to whoever may read the tables. Access is not p
 
 ## Where to go next
 
+- [Business Day Functions](Function-Library-MFDate.md) - `MFDate`, the functions that read these tables.
 - [Log Message Reference](Log-Message-Reference.md) - the calendar alerts.
 - [Configuration: Basics](Configuration-Basics.md) - where the adapter's settings live.
 - [Image Catalog](Image-Catalog.md) - the calendar projector image.
